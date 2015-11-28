@@ -18,8 +18,8 @@ In other browsers, OpenWebGIS may not display and work correctly.
 * Get link to download OpenWebGIS Android apk file from [getjar.com](http://www.getjar.com/mobile/870121/OpenWebGIS)
 </p>
 <p align="left">
-<img width="300" height="200" src="https://img.itch.io/aW1hZ2UvNDQ0OTUvMTkxOTYwLnBuZw==/347x500/lXahcZ.png" />
-<img width="300" height="200" src="https://img.itch.io/aW1hZ2UvNDQ0OTUvMTkxOTYxLnBuZw==/347x500/Z3z0Ky.png" />
+<img width="300" height="200" src="https://img.itch.io/aW1hZ2UvNDQ0OTUvMTkxOTYwLnBuZw==/original/C%2FSpld.png" />
+<img width="300" height="200" src="https://img.itch.io/aW1hZ2UvNDQ0OTUvMTkxOTYxLnBuZw==/original/11kfvk.png" />
 <img width="300" height="200" src="http://img.getjar.mobi/ss/86/870121.png" />
 <img width="300" height="200" src="http://img.getjar.mobi/ss/86/870121_4.png" />
 </p>

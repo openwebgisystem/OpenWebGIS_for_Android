@@ -17,6 +17,7 @@ In other browsers, OpenWebGIS may not display and work correctly.
 * Get link to download OpenWebGIS Android apk file from [aptoide.com](http://openwebgis.store.aptoide.com/app/market/openwebgis_app.openwebgis/2/13385533/OpenWebGIS)
 * Get link to download OpenWebGIS Android apk file from [getjar.com](http://www.getjar.com/mobile/870121/OpenWebGIS)
 </p>
+
 ### You can get source code of OpenWebGIS for desktop Windows&Linux operating system here: [https://github.com/openwebgisystem/OpenWebGIS](https://github.com/openwebgisystem/OpenWebGIS)
 <p align="left">
 <img width="300" height="200" src="https://img.itch.io/aW1hZ2UvNDQ0OTUvMTkxOTYwLnBuZw==/original/C%2FSpld.png" />

@@ -1932,7 +1932,7 @@ for (var b=0; b<edilayerMainLayer.features.length; b++)
 {sum.push(parseFloat(edilayerMainLayer.features[b].attributes[meanField2]));
 
 }}
-objMean[h]=Math.min.apply(0,sum);sum=[];
+objMean[h]=Math.min.apply(0,sum);sum=[]; 
 }
 for (h in objMean)
 {

@@ -1920,7 +1920,7 @@ for (var b=0; b<edilayerMainLayer.features.length; b++)
 {sum.push(parseFloat(edilayerMainLayer.features[b].attributes[meanField1]));
 ;}
 for (var b=0; b<edilayerMainLayer.features.length; b++)
-{edilayerMainLayer.features[b].attributes[rt]=Math.min.apply(0,sum);}
+{edilayerMainLayer.features[b].attributes[rt]=Math.min.apply(0,sum);sum=[];}
 alert("All done. Reopen table");return;
 }
 
@@ -1932,7 +1932,7 @@ for (var b=0; b<edilayerMainLayer.features.length; b++)
 {sum.push(parseFloat(edilayerMainLayer.features[b].attributes[meanField2]));
 
 }}
-objMean[h]=Math.min.apply(0,sum);
+objMean[h]=Math.min.apply(0,sum);sum=[];
 }
 for (h in objMean)
 {

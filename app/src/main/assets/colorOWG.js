@@ -39,7 +39,7 @@ var body = document.body; var docElem = document.documentElement;
 var DivEditeLeg=document.createElement("div");DivEditeLeg.id="id_colorPalOWG";
 DivEditeLeg.style.width="400px";DivEditeLeg.style.height="200px";
 DivEditeLeg.className="id_divRoutLegMain";DivEditeLeg.style.position="absolute";DivEditeLeg.style.display="block";DivEditeLeg.style.zIndex = 300000;DivEditeLeg.style.background="#ffffff";DivEditeLeg.style.border="2px solid black";DivEditeLeg.style.color="#000000";
-DivEditeLeg.style.left=Math.round(document.body.clientWidth/2-400);DivEditeLeg.style.top=Math.round(document.body.clientHeight/2);
+DivEditeLeg.style.left=Math.round(document.body.clientWidth/2);DivEditeLeg.style.top=Math.round(document.body.clientHeight/2);
 DivEditeLeg.innerHTML=colorpalOWG;
 if(!document.getElementById("id_colorPalOWG"))
 {body.appendChild(DivEditeLeg); 

@@ -7,6 +7,17 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +31,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -42,11 +54,30 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
     public static WebView mWebView;private ProgressDialog progressDialog;public String shtml;public String filenamesave;public String ntext;
     public Handler mHandler = new Handler();
-   // public ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    public SensorManager sensorManagerA;	//
+    public SensorManager sensorManagerM;
+    public SensorManager sensorManagerL;
+    private SensorManager sensorManagerT;
+    private SensorManager sensorManagerG;
+    private SensorManager sensorManagerO;
+    private SensorManager sensorManagerP;
+    public DJavaScriptInterface JSInterface;
+    private long lastUpdate;
+    public String stringSensorM=""; public String stringSensorL="";public String stringSensorT="";
+   private String stringSensorG="";private String stringSensorR="";private String stringSensorA="";String stringSensorP="";
+public String strsenGPS = "";
+    // public ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    private  LocationManager mLocationManager;
+    private LocationListener mLocationListener;
+    private float[] orientationVals=new float[3];
+    private float[] mRotationMatrix=new float[16];
 
 
     @Override
@@ -70,6 +101,47 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mWebView = (WebView) findViewById(R.id.activity_main_webview);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+              mLocationListener = new LocationListener() {
+                public void onStatusChanged(String provider, int status,
+                                            Bundle extras) {
+                    switch (status) {
+                        case LocationProvider.OUT_OF_SERVICE:
+                            Log.v("GPS demo",
+                                    "Status changed: " + provider + " provider"
+                                            + " out of service");
+                            break;
+                        case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                            Log.v("GPS demo",
+                                    "Status changed: " + provider + " provider"
+                                            + " temporarily unavailable");
+                            break;
+                        case LocationProvider.AVAILABLE:
+                            Log.v("GPS demo",
+                                    "Status changed: " + provider + " provider"
+                                            + " available");
+                            break;
+                    }
+                }
+
+                public void onProviderEnabled(String provider) {
+                    //Log.v("GPS demo", "Enabled new provider: " + provider);
+                }
+
+                public void onProviderDisabled(String provider) {
+                    //Log.v("GPS demo", "Disabled provider: " + provider);
+                }
+
+                public void onLocationChanged(Location location) {
+                    //Log.v("GPS demo", "Location changed");
+                    float lat = (float) (location.getLatitude());  float lon = (float) (location.getLongitude()); float alt = (float) (location.getAltitude());float sp = location.getSpeed();
+                    float tm = location.getTime();
+                    SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+                    String ntm; ntm=format1.format(tm);
+                   strsenGPS = "" +Float.toString(lat) + ","+Float.toString(lon)+"," + Float.toString(alt) +","+Float.toString(sp)+"," + ntm;
+
+                }
+            };
 
            // Enable Javascript
         WebSettings webSettings = mWebView.getSettings();
@@ -81,15 +153,41 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setAllowFileAccessFromFileURLs(true);
         webSettings.setSupportMultipleWindows(true);
         webSettings.setBuiltInZoomControls(true);
+       ////
+
+        //webSettings.setGeolocationDatabasePath(getFilesDir().getPath());
+        //webSettings.setGeolocationEnabled(true);
+
+        ////
         String newUA= "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0";
         webSettings.setUserAgentString(newUA);
+        sensorManagerA = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManagerM = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManagerL = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManagerG = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManagerO=(SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManagerP=(SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManagerT=(SensorManager) getSystemService(SENSOR_SERVICE);
+        //reg class of the sensor
+
+        sensorManagerA.registerListener(this, sensorManagerA.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManagerM.registerListener(this, sensorManagerM.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManagerL.registerListener(this, sensorManagerL.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManagerG.registerListener(this,sensorManagerG.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManagerO.registerListener(this,sensorManagerO.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManagerP.registerListener(this,sensorManagerP.getDefaultSensor(Sensor.TYPE_PRESSURE),SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManagerT.registerListener(this,sensorManagerT.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),SensorManager.SENSOR_DELAY_NORMAL);
+
+        lastUpdate = System.currentTimeMillis();
 
         webSettings.setAllowUniversalAccessFromFileURLs(true);
         mWebView.addJavascriptInterface(new DJavaScriptInterface(this), "AndroidFunction");
         mWebView.setWebContentsDebuggingEnabled(true);
-        mWebView.setWebViewClient(new WebViewClient() {final  ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mWebView.setWebViewClient(new WebViewClient() {
+            final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-       @Override
+
+            @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
                 if (url.equals("http://opengis.dlinkddns.com/gis/opengis_eng.html")) {
@@ -98,11 +196,9 @@ public class MainActivity extends AppCompatActivity {
                     intentn.setData(Uri.parse(url));
                     startActivity(intentn);
                     return true;
-                }
-                else
-                {
-                new Thread(new Runnable() {
-                    public void run() {
+                } else {
+                    new Thread(new Runnable() {
+                        public void run() {
 
                             mHandler.post(new Runnable() {
                                 public void run() {
@@ -112,16 +208,17 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    //}
-                }).start();
+                        //}
+                    }).start();
 
 
-                view.loadUrl(url);
-                 return true;}
+                    view.loadUrl(url);
+                    return true;
+                }
             }
 
             public void onPageFinished(WebView view, String url) {
-                  progressBar.setVisibility(ProgressBar.INVISIBLE);
+                progressBar.setVisibility(ProgressBar.INVISIBLE);
 
             }
 
@@ -129,23 +226,31 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        mWebView.setDownloadListener(new DownloadListener() {
-            private boolean isExternalStorageReadOnly() {
+        mWebView.setDownloadListener(
+
+                new DownloadListener() {
+                                private boolean isExternalStorageReadOnly() {
                 String extStorageState = Environment.getExternalStorageState();
                 if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)) {
                     return true;
-                }                return false;            }
+                }
+                return false;
+            }
+
             private boolean isExternalStorageAvailable() {
                 String extStorageState = Environment.getExternalStorageState();
                 if (Environment.MEDIA_MOUNTED.equals(extStorageState)) {
-                    return true;     }                return false;          }
+                    return true;
+                }
+                return false;
+            }
 
             public void onDownloadStart(String url, String userAgent,
                                         String contentDisposition, String mimetype, long contentLength) {
 
 
 ///////////////////////////
-                            String filename = filenamesave;
+                String filename = filenamesave;
                 String string = shtml;
                 FileOutputStream outputStream;
                 String baseDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
@@ -162,10 +267,18 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        });
+        });mWebView.getSettings().setGeolocationEnabled(true);
 
-            mWebView.setWebChromeClient(new WebChromeClient() {
-            WebView newView = new WebView(getApplicationContext());
+       //lm.addGpsStatusListener(lGPS);
+        mWebView.setWebChromeClient(new WebChromeClient() {
+
+            //WebView newView = new WebView(getApplicationContext());
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+                callback.invoke(origin, true, false);
+
+            }
+
 
             @Override
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
@@ -175,12 +288,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         Intent intent = new Intent(MainActivity.this, PopupActivity.class);
                         intent.putExtra("URL", url);
-                        if(url.equals("https://www.facebook.com/openwebgisPage")||url.equals("http://openwebgisystem.blogspot.ru/")||url.equals("https://m.youtube.com/user/openwebgis?")||url.equals("http://www.mediawiki.org/")||url.equals("https://www.mediawiki.org/wiki/MediaWiki")||url.equals("https://www.mediawiki.org/")||url.equals("https://www.youtube.com/user/openwebgis")||url.equals("http://vk.com/openwebgis"))
-                        {}
-                        else{
-                             startActivity(intent);
+                        if (url.equals("https://www.facebook.com/openwebgisPage") || url.equals("http://openwebgisystem.blogspot.ru/") || url.equals("https://m.youtube.com/user/openwebgis?") || url.equals("http://www.mediawiki.org/") || url.equals("https://www.mediawiki.org/wiki/MediaWiki") || url.equals("https://www.mediawiki.org/") || url.equals("https://www.youtube.com/user/openwebgis") || url.equals("http://vk.com/openwebgis")) {
+                        } else {
+                            startActivity(intent);
 
-                        newView.destroy();}
+                            newView.destroy();
+                        }
                     }
                 });
 
@@ -188,10 +301,106 @@ public class MainActivity extends AppCompatActivity {
                 transport.setWebView(newView);
                 resultMsg.sendToTarget();
                 return true;
-            }
-        });
+                }
+            });
+
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+        webSettings.setDomStorageEnabled(true);
         mWebView.loadUrl("file:///android_asset/index.html");
 
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            float[] valuesM = event.values;
+            double lengthVector=Math.sqrt(valuesM[0]*valuesM[0]+valuesM[1]*valuesM[1]+valuesM[2]*valuesM[2]);
+            stringSensorM=""+String.format(Locale.US, "%.2f", lengthVector)+";"+String.format(Locale.US, "%.2f",valuesM[0])+";"+String.format(Locale.US, "%.2f",valuesM[1])+";"+String.format(Locale.US, "%.2f",valuesM[2]);
+              }
+        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+            float[] valuesL = event.values;
+            stringSensorL=""+String.format(Locale.US, "%.2f", valuesL[0]);
+             }
+        else{        }
+        if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
+            float[] valuesT = event.values;
+            stringSensorT=""+String.format(Locale.US, "%.2f", valuesT[0]);
+            }
+        else{        }
+        if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
+            float[] valuesP = event.values;
+            stringSensorP=""+String.format(Locale.US, "%.2f", valuesP[0]);
+
+        }
+        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            float[] valuesG = event.values;
+            stringSensorG=""+String.format(Locale.US, "%.2f", (valuesG[0] * 180) / Math.PI) + ";" + String.format(Locale.US, "%.2f", (valuesG[1] * 180) / Math.PI) + ";" + String.format(Locale.US, "%.2f", (valuesG[2] * 180) / Math.PI);
+
+        }
+           if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            float[] valuesR = event.values;
+          // Convert the rotation-vector to a 4x4 matrix.
+
+            sensorManagerO.getRotationMatrixFromVector(mRotationMatrix, event.values);
+            sensorManagerO.remapCoordinateSystem(mRotationMatrix, sensorManagerO.AXIS_X, sensorManagerO.AXIS_Z, mRotationMatrix);
+            sensorManagerO.getOrientation(mRotationMatrix, orientationVals);
+
+            // Optionally convert the result from radians to degrees
+            orientationVals[0] = (float) Math.toDegrees(orientationVals[0]);
+            if(orientationVals[0]<0){orientationVals[0]+=360;}
+            orientationVals[1] = (float) Math.toDegrees(orientationVals[1]);
+            orientationVals[2] = (float) Math.toDegrees(orientationVals[2]);
+
+               stringSensorR=""+String.valueOf(orientationVals[0]) + ";" + String.valueOf(orientationVals[1]) + ";" + String.valueOf( orientationVals[2]);
+
+
+        }
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float[] values = event.values;
+            // the projection of the acceleration on the axis of the coordinate system
+            float x = values[0];
+            float y = values[1];
+            float z = values[2];
+            stringSensorA=""+String.format(Locale.US, "%.2f", x)+";"+String.format(Locale.US, "%.2f", y)+";"+String.format(Locale.US, "%.2f", y)+";";
+            //phone acceleration module square, divided by the square of the gravity acceleration
+            float accelationSquareRoot = (x * x + y * y + z * z)/(SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
+            //current time
+            long actualTime = System.currentTimeMillis();
+
+               }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // register this class as a listener for the orientation and
+        // accelerometer sensors
+        //sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        // unregister listener
+
+        try{ sensorManagerA.unregisterListener(this);}catch(Exception e){}
+        try{sensorManagerL.unregisterListener(this);}catch(Exception e){}
+      try{sensorManagerT.unregisterListener(this);}catch(Exception e){}
+        try{sensorManagerG.unregisterListener(this);}catch(Exception e){}
+        try{sensorManagerO.unregisterListener(this);}catch(Exception e){}
+        try{sensorManagerP.unregisterListener(this);}catch(Exception e){}
+        checkPermission("android.permission.ACCESS_FINE_LOCATION", 1, 0);
+      try{ mLocationManager.removeUpdates(mLocationListener);}catch(Exception e){}
+        mLocationManager=null;mLocationListener=null;
+        //mLocationManager.
+        super.onPause();
 
     }
 
@@ -202,10 +411,150 @@ public class MainActivity extends AppCompatActivity {
             mContext = c;
         }
         @JavascriptInterface
-        public void showToast(String textfile, String filename){shtml=textfile.toString(); filenamesave=filename.toString();
-            // Toast.makeText(mContext, toast.toString(), Toast.LENGTH_SHORT).show();
+        public void showToast(String textfile, String filename)
+        {shtml=textfile.toString();
+            filenamesave=filename.toString();
+            if (Environment.getExternalStorageState() == null) {
+                //create new file directory object
+                File directory = new File(Environment.getDataDirectory() + "/OpenWebGIS/");
+                // if no directory exists, create new directory
+                if (!directory.exists()) { directory.mkdir();  }
+                File file = new File(directory, filename);
+                FileWriter writer = null;
+                try {
+                    writer = new FileWriter(file);
+                    writer.write(directory.toString());
+                    writer.close();
 
+                    Toast.makeText(MainActivity.this, "File's saved in OpenWebGIS folder", Toast.LENGTH_LONG).show();
+                    MessageBox("File's saved in OpenWebGIS folder");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                filename = filenamesave;
+                String string = shtml;
+                FileOutputStream outputStream;
+                String baseDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+                File file = new File(baseDir, filename);
+                FileWriter writer = null;
+                try {
+                    writer = new FileWriter(file);
+                    writer.write(string.toString());
+                    writer.close();
+
+                    Toast.makeText(MainActivity.this, "File's saved in downloads folder", Toast.LENGTH_LONG).show();
+                    MessageBox("File's saved in downloads folder");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+        @JavascriptInterface
+        public String GetForced_GPSdata() {
+
+            //mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            checkPermission("android.permission.ACCESS_FINE_LOCATION", 1, 0);
+            final Location currentLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+
+           if (currentLocation != null) {
+                float lat = (float) (currentLocation.getLatitude());
+                float lon = (float) (currentLocation.getLongitude());
+                float alt = (float) (currentLocation.getAltitude());
+                float sp = currentLocation.getSpeed();
+                               float tm = currentLocation.getTime();
+                 SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+               String ntm; ntm=format1.format(tm);
+               strsenGPS = "" +Float.toString(lat) + ","+Float.toString(lon)+"," + Float.toString(alt) +","+Float.toString(sp)+"," + ntm;
+            } else {
+                strsenGPS = "No location info,No location info,No location info,No location info,No location info,";
+
+            }
+            /*mLocationListener = new LocationListener() {
+                public void onStatusChanged(String provider, int status,
+                                            Bundle extras) {
+                    switch (status) {
+                        case LocationProvider.OUT_OF_SERVICE:
+                            Log.v("GPS demo",
+                                    "Status changed: " + provider + " provider"
+                                            + " out of service");
+                            break;
+                        case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                            Log.v("GPS demo",
+                                    "Status changed: " + provider + " provider"
+                                            + " temporarily unavailable");
+                            break;
+                        case LocationProvider.AVAILABLE:
+                            Log.v("GPS demo",
+                                    "Status changed: " + provider + " provider"
+                                            + " available");
+                            break;
+                    }
+                }
+
+                public void onProviderEnabled(String provider) {
+                    //Log.v("GPS demo", "Enabled new provider: " + provider);
+                }
+
+                public void onProviderDisabled(String provider) {
+                    //Log.v("GPS demo", "Disabled provider: " + provider);
+                }
+
+                public void onLocationChanged(Location location) {
+                    //Log.v("GPS demo", "Location changed");
+                    float lat = (float) (location.getLatitude());  float lon = (float) (location.getLongitude()); float alt = (float) (location.getAltitude());float sp = location.getSpeed();
+                    float tm = location.getTime();
+                    SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+                    String ntm; ntm=format1.format(tm);
+                   strsenGPS = "" +Float.toString(lat) + ","+Float.toString(lon)+"," + Float.toString(alt) +","+Float.toString(sp)+"," + ntm;
+
+                }
+            };*/
+
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+            if (mLocationManager != null) {
+
+                final Location currentLocationN = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                if (currentLocationN != null) {
+                    float lat = (float) (currentLocationN.getLatitude());
+                    float lon = (float) (currentLocationN.getLongitude());
+                    float alt = (float) (currentLocationN.getAltitude());
+                    float sp = currentLocationN.getSpeed();
+                    float tm = currentLocationN.getTime();
+                    SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+                    String ntm; ntm=format1.format(tm);
+                    strsenGPS = "" +Float.toString(lat) + ","+Float.toString(lon)+"," + Float.toString(alt) +","+Float.toString(sp)+"," + ntm;
+                    } else {
+                    strsenGPS = "No location info,No location info,No location info,No location info,No location info,";
+
+                }
+
+
+            }
+            return strsenGPS;
+        }
+        @JavascriptInterface
+        public String dataSensorsM() {return stringSensorM;}
+        @JavascriptInterface
+        public String dataSensorsL()
+        {
+            return stringSensorL;
+        }
+        @JavascriptInterface
+        public String dataSensorsT() { return stringSensorT; }
+        @JavascriptInterface
+        public String dataSensorsG() { return stringSensorG; }
+        @JavascriptInterface
+        public String dataSensorsR() { return stringSensorR; }
+        @JavascriptInterface
+        public String dataSensorsA() { return stringSensorA; }
+        @JavascriptInterface
+        public String dataSensorsP() { return stringSensorP; }
+
+
         @JavascriptInterface
         public String   setAndroidfileZIPand()
         {

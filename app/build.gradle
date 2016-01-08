@@ -8,8 +8,8 @@ android {
         applicationId "openwebgis_app.openwebgis"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 2
-        versionName "1.011"
+        versionCode 3
+        versionName "1.012"
     }
     buildTypes {
         release {

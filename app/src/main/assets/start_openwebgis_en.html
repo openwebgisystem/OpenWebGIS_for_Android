@@ -23324,11 +23324,12 @@ alert("This function works only in online web version of OpenWebGIS")
 {return;
 xmlhttp.send('l='+strsave);}
 }/////////////////////////
-if (navigator.geolocation)     {     navigator.geolocation.getCurrentPosition(showPositionInterval,showError);     }   
+
+if (navigator.geolocation)    { navigator.geolocation.getCurrentPosition(showPositionInterval,showError,{enableHighAccuracy:true, maximumAge: 0, timeout: 6000 }); }   
 else{alert("Geolocation is not supported by this browser.");return;}  
 intervaTimeGeoLoc=setInterval( function(){
 
-if (navigator.geolocation)     {     navigator.geolocation.getCurrentPosition(showPositionInterval,showError);     }   
+if (navigator.geolocation)     { navigator.geolocation.getCurrentPosition(showPositionInterval,showError,{enableHighAccuracy:true, maximumAge: 0, timeout: 6000}); }   
 else{alert("Geolocation is not supported by this browser.");return;}  
 
 },parseInt(document.getElementById("id_MyLocatSec").value*1000));
@@ -23339,17 +23340,59 @@ function StopMyGeoLocation()
 if(intervaTimeGeoLoc!==0){clearInterval(intervaTimeGeoLoc);intervaTimeGeoLoc=0;}
 }
 function showPositionInterval(position)
-{
-var lat=position.coords.latitude;  var lon=position.coords.longitude;  var alt=position.coords.altitude; var sp=position.coords.speed; var timeS=new Date(position.timestamp);
-var new_pos=new OpenLayers.LonLat(lon,lat).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
-points=new OpenLayers.Geometry.Point(new_pos.lon, new_pos.lat);
-var first_point= new OpenLayers.Feature.Vector(points);
+{//alert(position)
+if(position.coords)
+{var lat=position.coords.latitude;  var lon=position.coords.longitude;  var alt=position.coords.altitude; var sp=position.coords.speed; var timeS=new Date(position.timestamp);
 var now=timeS;var Y=now.getFullYear();
 var M=now.getMonth()+1;if(parseInt(M)<10){M='0'+M;}var D=now.getDate();if(parseInt(D)<10){D='0'+D;}
 var H=now.getHours();if(parseInt(H)<10){H='0'+H;}var MM=now.getMinutes();if(parseInt(MM)<10){MM='0'+MM;}
 var S=now.getSeconds();if(parseInt(S)<10){S='0'+S;}var neD=Y+'-'+M+'-'+D+'T'+H+':'+MM+':'+S;
-var attr={};attr.latitude=lat; attr.longitude=lon;attr.altitude=alt;attr.speed=sp;attr.time=neD; var strsave=lon+";"+lat+";"+alt+";"+sp+";"+neD;
+}
+else
+{position=position.split(",");var lat=parseFloat(position[0]);  var lon=parseFloat(position[1]);  var alt=parseFloat(position[2]); var sp=parseFloat(position[3]); var timeS=position[4];var neD=timeS.split(" ")[0]+"T"+timeS.split(" ")[1];}
+var new_pos=new OpenLayers.LonLat(lon,lat).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
+points=new OpenLayers.Geometry.Point(new_pos.lon, new_pos.lat);
+var first_point= new OpenLayers.Feature.Vector(points);
+
+var attr={};attr.latitude=lat; attr.longitude=lon;attr.altitude=alt;attr.speed=sp;attr.speed_kmh=sp*3.6;attr.time=neD; var strsave=lon+";"+lat+";"+alt+";"+sp+";"+neD; var strsens='';
+try{if(AndroidFunction.dataSensorsM()!==""){attr.magnetic=AndroidFunction.dataSensorsM().split(";")[0];strsens+=' magneticField:'+attr.magnetic+' μT<br>';}}catch(e){};
+try{if(AndroidFunction.dataSensorsL()!==""){attr.light=AndroidFunction.dataSensorsL();strsens+=' light:'+attr.light+' lx<br>';}}catch(e){};
+try{if(AndroidFunction.dataSensorsT()!==""){attr.temperature=AndroidFunction.dataSensorsT();strsens+=' temp:'+attr.temperature+'<br>';}}catch(e){};
+try{if(AndroidFunction.dataSensorsG()!==""){attr.gyroscopeX=AndroidFunction.dataSensorsG().split(";")[0];
+attr.gyroscopeY=AndroidFunction.dataSensorsG().split(";")[1];attr.gyroscopeZ=AndroidFunction.dataSensorsG().split(";")[2];}}catch(e){};
+try{if(AndroidFunction.dataSensorsR()!==""){attr.azimuth=AndroidFunction.dataSensorsR().split(";")[0];
+attr.Pitch=AndroidFunction.dataSensorsR().split(";")[1];attr.Roll=AndroidFunction.dataSensorsR().split(";")[2];}}catch(e){};
+
+try{if(AndroidFunction.dataSensorsA()!==""){attr.accelerometerX=AndroidFunction.dataSensorsA().split(";")[0];
+attr.accelerometerY=AndroidFunction.dataSensorsA().split(";")[1];attr.accelerometerZ=AndroidFunction.dataSensorsA().split(";")[2];}}catch(e){};
+try{if(AndroidFunction.dataSensorsM()!==""){attr.magneticX=AndroidFunction.dataSensorsM().split(";")[1];attr.magneticY=AndroidFunction.dataSensorsM().split(";")[2];attr.magneticZ=AndroidFunction.dataSensorsM().split(";")[3];}}catch(e){};
+
+try{if(AndroidFunction.dataSensorsP()!==""){attr.pressure=AndroidFunction.dataSensorsP();}}catch(e){};
+
 first_point.attributes=attr; new_layer_MyLocationInterval.addFeatures(first_point);
+///////////////
+var bbox = document.getElementById("map").getBoundingClientRect();
+ var body = document.body; var docElem = document.documentElement; var scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop;
+ var scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft; var clientTop = docElem.clientTop || body.clientTop || 0
+ var clientLeft = docElem.clientLeft || body.clientLeft || 0; var topTop = bbox.top + scrollTop - clientTop
+ var leftLeft = bbox.left + scrollLeft - clientLeft;var DivEditeLeg=document.createElement("div");
+DivEditeLeg.id="id_divSensAndLocation";DivEditeLeg.className="id_divRoutLegMain";
+DivEditeLeg.style.position="relative";
+DivEditeLeg.innerHTML='<div id="id_divSAndrLocation" style="background:#ffffff; color:#0000ff;z-index: 6000;position:absolute;left:'+Math.round(leftLeft+50)+'px;top:'+Math.round(topTop+65)+
+'px;overflow:hidden; border: 1px solid black;">'+'<img onclick="closeWearherLegendWin(this)" src="openlayers/theme/default/img/close.gif" style="position:relative; top:10px;float:right; cursor:pointer">'+
+'<a style="font-size: 9px;">you can move this window if you select menu item: </a><br><a style="font-size: 9px;">Interface->switch to interface drag</a><br>'+
+'<a>Tracking position in real time:</a><br>'+
+'<a id=id_geolocsensowg>latitude:'+lat+'<br>'+
+'longitude:'+lon+'<br>'+
+'altitude:'+alt+'m speed:'+sp+'  m/s;'+(sp*3.6).toFixed(1)+'km/h<br>'+'time:'+neD+'<br>'+strsens+'</a></div>';
+if(!document.getElementById("id_divSensAndLocation"))
+{body.appendChild(DivEditeLeg); document.getElementById("id_divSensAndLocation").onmousedown=function(event){drags(event)};
+document.getElementById("id_divSensAndLocation").onmouseup=function(e){enddrag()};}
+if(document.getElementById("id_geolocsensowg"))
+{document.getElementById("id_geolocsensowg").innerHTML='latitude:'+lat+'<br>'+'longitude:'+lon+'<br>'+'altitude:'+alt+'m speed:'+sp+'m/s;'+(sp*3.6).toFixed(1)+'km/h<br>'+'time:'+neD+'<br>'+strsens}
+
+
+///////////////////
 if(document.getElementById("id_PointSaveServerLocat").checked==true)
 ////////
 {
@@ -23460,8 +23503,14 @@ function showError(error)
 {   switch(error.code)      
 {     case error.PERMISSION_DENIED:       alert("User denied the request for Geolocation.");       break;
      case error.POSITION_UNAVAILABLE:       alert("Location information is unavailable.");       break; 
-    case error.TIMEOUT:       alert("The request to get user location timed out.");      break;  
+    case error.TIMEOUT:       /*alert("The request to get user location timed out."); */try{ GetForcedDataGPSj(); }catch(e){}    break;  
    case error.UNKNOWN_ERROR:       alert("An unknown error occurred.");       break;     }   }
+function GetForcedDataGPSj()
+{
+position=AndroidFunction.GetForced_GPSdata();
+showPositionInterval(position);
+}
+
 function OpenTableOWG()
 {
 if(this.document.getElementById("editL1").value=="0")

@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -19,11 +22,14 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -55,6 +61,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -78,6 +85,8 @@ public String strsenGPS = "";
     private LocationListener mLocationListener;
     private float[] orientationVals=new float[3];
     private float[] mRotationMatrix=new float[16];
+    private WifiManager wifi;    private List<ScanResult> wifi_results;private int sizeWF = 0;
+    private AlertDialog DialogWF;
 
 
     @Override
@@ -101,6 +110,17 @@ public String strsenGPS = "";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mWebView = (WebView) findViewById(R.id.activity_main_webview);
+        wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        /*registerReceiver(new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context c, Intent intent)
+            {
+                wifi_results = wifi.getScanResults();
+                sizeWF = wifi_results.size();
+            }
+        }, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));*/
+
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
               mLocationListener = new LocationListener() {
                 public void onStatusChanged(String provider, int status,
@@ -553,6 +573,66 @@ public String strsenGPS = "";
         public String dataSensorsA() { return stringSensorA; }
         @JavascriptInterface
         public String dataSensorsP() { return stringSensorP; }
+
+        @JavascriptInterface
+        public String getWiFi()
+        {
+            checkPermission("android.permission.CHANGE_WIFI_STATE", 1, 0);
+            if (wifi.isWifiEnabled() == false)
+            {
+                AlertDialog.Builder builderWF = new AlertDialog.Builder(MainActivity.this);
+                builderWF.setMessage("WiFi is disabled. Make it enabled?");
+                builderWF.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        wifi.setWifiEnabled(true);
+                    }
+                });
+                builderWF.setNegativeButton("Cancel", null);
+                if( DialogWF != null && DialogWF.isShowing() ){}
+                else{DialogWF = builderWF.show();}
+
+                //wifi.setWifiEnabled(true);
+
+            }
+            wifi_results = wifi.getScanResults();
+            sizeWF = wifi_results.size();
+            //wifi.startScan();
+            String FullWiFI_string=""; String SSIDw="";String BSSIDw="";String capabilitiesw="";String centerFreq0w="";
+            String centerFreq1w=""; String channelWidthw=""; String frequencyw=""; String levelw=""; String operatorFriendlyNamew=""; String timestampw="";
+            String venueNamew="";String levelwPers="";
+
+            while (sizeWF > 0) {
+                SSIDw+=wifi_results.get(sizeWF-1).SSID.toString()+"_;_";
+                BSSIDw+=wifi_results.get(sizeWF-1).BSSID.toString()+"_;_";
+                capabilitiesw+=wifi_results.get(sizeWF-1).capabilities.toString()+"_;_";
+                if(Build.VERSION.SDK_INT>=23 ){centerFreq0w+=wifi_results.get(sizeWF-1).centerFreq0+"_;_";}else{centerFreq0w+=" "+"_;_";}
+                if(Build.VERSION.SDK_INT>=23 ){centerFreq1w+=wifi_results.get(sizeWF-1).centerFreq1+"_;_";}else{centerFreq1w+=" "+"_;_";}
+                if(Build.VERSION.SDK_INT>=23)
+                {channelWidthw+=wifi_results.get(sizeWF-1).channelWidth+"_;_";}
+                else{channelWidthw+=" "+"_;_";}
+                frequencyw+=wifi_results.get(sizeWF-1).frequency+"_;_";
+                levelw+=wifi_results.get(sizeWF-1).level+"_;_";
+                levelwPers+=WifiManager.calculateSignalLevel(wifi_results.get(sizeWF - 1).level, 100)+"_;_";
+                if(Build.VERSION.SDK_INT>=23){operatorFriendlyNamew+=wifi_results.get(sizeWF-1).operatorFriendlyName+"_;_";}
+                else{operatorFriendlyNamew+=" "+"_;_";}
+                SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+                float tm =System.currentTimeMillis() - SystemClock.elapsedRealtime() + (wifi_results.get(sizeWF-1).timestamp/1000);
+                String ntm; ntm=format1.format(tm);
+                timestampw+=ntm+"_;_";
+                if(Build.VERSION.SDK_INT>=23)
+                {venueNamew+=wifi_results.get(sizeWF-1).venueName+"_;_";}
+                else{venueNamew+=" "+"_;_";}
+
+
+                //MessageBox(SSIDw);
+                sizeWF = sizeWF - 1;
+            }
+            FullWiFI_string=SSIDw+"_//_"+BSSIDw+"_//_"+capabilitiesw+"_//_"+centerFreq0w+"_//_"+centerFreq1w+"_//_"+channelWidthw+"_//_"+frequencyw+"_//_"+levelw+"_//_"+operatorFriendlyNamew+"_//_"+timestampw+"_//_"+venueNamew+"_//_"+levelwPers;
+            if(wifi_results.size()==0)
+            {String nw="no WiFi_;_";FullWiFI_string=nw+"_//_"+nw+"_//_"+nw+"_//_"+nw+"_//_"+nw+"_//_"+nw+"_//_"+nw+"_//_"+nw+"_//_"+nw+"_//_"+nw+"_//_"+nw+"_//_"+nw;}
+            return FullWiFI_string;
+
+        }
 
 
         @JavascriptInterface

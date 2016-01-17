@@ -811,6 +811,8 @@ var file3dSky=[];
 var intervaTimeGeoLoc=0;
 var new_layer_MyLocationInterval=0;
 var new_layer_MyLocationIntervalTrack=0;
+var new_layer_WiFiLocationNumber=0;
+var new_layer_WiFiLocationList=0;
 var MainImageData2='';
 var exportGridOWG=0;
 var osmb;
@@ -23055,7 +23057,8 @@ DivEditeLeg.innerHTML='<div id="id_divMyLocation" style="background:#ffffff; col
 '<a>Name of Layer:</a><input type="text" size="15" id="id_MyLocatName" value="MyLocation"/><br>'+
 '<input type="checkbox" id="id_MoveMyLoc" title="" value="checkbox" checked/><a style="font-size: 11px;">move extent of the map to the position.</a><br><a style="font-size: 11px;">square size(extent) in degrees</a><input type="text" style="font-size: 11px;" title="size square in degrees" size="4" id="MyPosmovemap_val" value="0.005"/><br>'+
 '<input type="checkbox" id="id_TrackMyLocTime" title="" value="checkbox" checked/><a>Add Track</a><br>'+
-'<input type="checkbox" id="id_PointSaveServerLocat" title="Tick to save the data of your location on the server of OpenWebGIS. The data is saved only after pressing the button /start/. After pressing the button /stop/ the recording (saving) stops. NOTE: If you have activated the location saving on the server, then after pressing the start button you will get an alphanumeric identifier id of your records, it will appear in the text box on the right. This identifier can be used by you or by someone else (whom you will give it) to get the information about your location by entering id in the appropriate box under the name /insert id of geolocation/. This field is located below in the section /Click to locate other objects or display recorded locations:/" value="checkbox" /><a style="font-size: 11px;">save location</a><a style="font-size: 12px;"> id:</a><textarea title="If you have activated the locations saving on the server, then after pressing the start button you will get IN THIS BOX an alphanumeric identifier id of your records" style="height:20px; width:120px" id="id_PointSaveLinkLocat" type="text" size="10" value=""></textarea>'+
+'<input type="checkbox" id="id_PointSaveServerLocat" title="Tick to save the data of your location on the server of OpenWebGIS. The data is saved only after pressing the button /start/. After pressing the button /stop/ the recording (saving) stops. NOTE: If you have activated the location saving on the server, then after pressing the start button you will get an alphanumeric identifier id of your records, it will appear in the text box on the right. This identifier can be used by you or by someone else (whom you will give it) to get the information about your location by entering id in the appropriate box under the name /insert id of geolocation/. This field is located below in the section /Click to locate other objects or display recorded locations:/" value="checkbox" /><a style="font-size: 11px;">save location</a><a style="font-size: 12px;"> id:</a><textarea title="If you have activated the locations saving on the server, then after pressing the start button you will get IN THIS BOX an alphanumeric identifier id of your records" style="height:20px; width:120px" id="id_PointSaveLinkLocat" type="text" size="10" value=""></textarea><br>'+
+'<input type="checkbox" id="id_WiFigetPoint" title="" value="checkbox"/><a style="font-size: 11px;">detect WiFi access points</a><br>'+
 '<p> <button type=button onclick=GetMyGeoLocation() title="After each clicking this button, you will get one point with your geolocation (position)">Get current position</button></p>'+
 '<div onclick=showotherlocation() style="border:solid 2px #000; cursor:pointer "><a style="font-size: 11px;">Click to locate other objects or display recorded locations</a></div>'+
 '<div id="id_divOtherGeolocat" style="display:none;">'+
@@ -23283,6 +23286,7 @@ var err=(document.getElementById("id_MyLocatSec").value/document.getElementById(
 if(err==false){alert("error in seconds");return;}
 var ArrayFeatures=[];
 new_layer_MyLocationInterval = new OpenLayers.Layer.Vector(document.getElementById("id_MyLocatName").value,{renderers:["Canvas", "SVG", "VML"]});
+
 var new_style_layer= new OpenLayers.Style({
  pointRadius: 4, fillColor: "#FF9000", strokeColor: "#FF0000",
  strokeWidth: 2,fillOpacity:1, strokeOpacity:1 });
@@ -23305,6 +23309,24 @@ new_layer_MyLocationIntervalTrack.projection=new OpenLayers.Projection("EPSG:900
 map.addLayer(new_layer_MyLocationIntervalTrack);var t=document.createElement('option');
 t.value=new_layer_MyLocationIntervalTrack.name;t.text=new_layer_MyLocationIntervalTrack.name;
 document.getElementById("editL1").appendChild(t);
+}
+if(document.getElementById("id_WiFigetPoint").checked==true)
+{new_layer_WiFiLocationList=new OpenLayers.Layer.Vector(document.getElementById("id_MyLocatName").value+"WifiPoints_list",{renderers:["Canvas", "SVG", "VML"]});
+new_layer_WiFiLocationList.styleMap=new OpenLayers.StyleMap({'default':new_style_layer,'select': selStyle});
+new_layer_WiFiLocationList.projection=new OpenLayers.Projection("EPSG:900913");
+map.addLayer(new_layer_WiFiLocationList);
+var t=document.createElement('option');
+t.value=new_layer_WiFiLocationList.name;t.text=new_layer_WiFiLocationList.name;
+document.getElementById("editL1").appendChild(t);
+
+new_layer_WiFiLocationNumber=new OpenLayers.Layer.Vector(document.getElementById("id_MyLocatName").value+"WifiPoints_number",{renderers:["Canvas", "SVG", "VML"]});
+new_layer_WiFiLocationNumber.styleMap=new OpenLayers.StyleMap({'default':new_style_layer,'select': selStyle});
+new_layer_WiFiLocationNumber.projection=new OpenLayers.Projection("EPSG:900913");
+map.addLayer(new_layer_WiFiLocationNumber);
+var t=document.createElement('option');
+t.value=new_layer_WiFiLocationNumber.name;t.text=new_layer_WiFiLocationNumber.name;
+document.getElementById("editL1").appendChild(t);
+
 }
 if(document.getElementById("id_PointSaveServerLocat").checked==true)
 ////////
@@ -23350,10 +23372,11 @@ var S=now.getSeconds();if(parseInt(S)<10){S='0'+S;}var neD=Y+'-'+M+'-'+D+'T'+H+'
 }
 else
 {position=position.split(",");var lat=parseFloat(position[0]);  var lon=parseFloat(position[1]);  var alt=parseFloat(position[2]); var sp=parseFloat(position[3]); var timeS=position[4];var neD=timeS.split(" ")[0]+"T"+timeS.split(" ")[1];}
+var err=(lat/lat) ? true : false; 
+if(err==false){alert("Please turn on geolocation(location)");return;}
 var new_pos=new OpenLayers.LonLat(lon,lat).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
 points=new OpenLayers.Geometry.Point(new_pos.lon, new_pos.lat);
 var first_point= new OpenLayers.Feature.Vector(points);
-
 var attr={};attr.latitude=lat; attr.longitude=lon;attr.altitude=alt;attr.speed=sp;attr.speed_kmh=sp*3.6;attr.time=neD; var strsave=lon+";"+lat+";"+alt+";"+sp+";"+neD; var strsens='';
 try{if(AndroidFunction.dataSensorsM()!==""){attr.magnetic=AndroidFunction.dataSensorsM().split(";")[0];strsens+=' magneticField:'+attr.magnetic+' μT<br>';}}catch(e){};
 try{if(AndroidFunction.dataSensorsL()!==""){attr.light=AndroidFunction.dataSensorsL();strsens+=' light:'+attr.light+' lx<br>';}}catch(e){};
@@ -23370,6 +23393,33 @@ try{if(AndroidFunction.dataSensorsM()!==""){attr.magneticX=AndroidFunction.dataS
 try{if(AndroidFunction.dataSensorsP()!==""){attr.pressure=AndroidFunction.dataSensorsP();}}catch(e){};
 
 first_point.attributes=attr; new_layer_MyLocationInterval.addFeatures(first_point);
+if(document.getElementById("id_WiFigetPoint").checked==true)
+{try{var str_wifi=AndroidFunction.getWiFi();var str_wifi_name=str_wifi.split("_//_")[0].split("_;_");var str_wifi_addres=str_wifi.split("_//_")[1].split("_;_");
+var str_wifi_2=str_wifi.split("_//_")[2].split("_;_");var str_wifi_3=str_wifi.split("_//_")[3].split("_;_");var str_wifi_4=str_wifi.split("_//_")[4].split("_;_");
+var str_wifi_5=str_wifi.split("_//_")[5].split("_;_");var str_wifi_6=str_wifi.split("_//_")[6].split("_;_");var str_wifi_7=str_wifi.split("_//_")[7].split("_;_");
+var str_wifi_8=str_wifi.split("_//_")[8].split("_;_");var str_wifi_9=str_wifi.split("_//_")[9].split("_;_");var str_wifi_10=str_wifi.split("_//_")[10].split("_;_");
+var str_wifi_levelPers=str_wifi.split("_//_")[11].split("_;_");
+for(var wf=0;wf<str_wifi_name.length-1;wf++)
+{var new_posw=new OpenLayers.LonLat(lon,lat).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
+var pointsw=new OpenLayers.Geometry.Point(new_posw.lon, new_posw.lat);
+var first_pointw= new OpenLayers.Feature.Vector(pointsw);
+var attrw={};attrw.latitude=lat;attrw.longitude=lon;attrw.name_SSID=str_wifi_name[wf];attrw.address_BSSID=str_wifi_addres[wf];attrw.capabilities=str_wifi_2[wf]; 
+attrw.centerFreq0=str_wifi_3[wf];attrw.centerFreq1=str_wifi_4[wf];attrw.channelWidth=str_wifi_5[wf];attrw.frequency=str_wifi_6[wf];attrw.level=str_wifi_7[wf];attrw.level_pers=str_wifi_levelPers[wf];
+attrw.operatorFriendlyName=str_wifi_8[wf];attrw.time=str_wifi_9[wf].split(" ")[0]+"T"+str_wifi_9[wf].split(" ")[1];attrw.venueName=str_wifi_10[wf];
+attrw.time2=neD;first_pointw.attributes=attrw; 
+new_layer_WiFiLocationList.addFeatures(first_pointw);
+}
+var new_posn=new OpenLayers.LonLat(lon,lat).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
+var pointsn=new OpenLayers.Geometry.Point(new_posn.lon, new_posn.lat);
+var first_pointn= new OpenLayers.Feature.Vector(pointsn);
+var attrn={};attrn.latitude=lat;attrn.longitude=lon;attrn.WIFInumberPoints=str_wifi_name.length;
+if(str_wifi_name[0]=="no WiFi"&&str_wifi_addres[0]=="no WiFi"&&str_wifi_2[0]=="no WiFi"){attrn.WIFInumberPoints=0;}
+attrn.time=neD;first_pointn.attributes=attrn;
+strsens+=' wifiNum:'+attrn.WIFInumberPoints+'<br>';
+new_layer_WiFiLocationNumber.addFeatures(first_pointn);
+
+}catch(e){};
+}
 ///////////////
 var bbox = document.getElementById("map").getBoundingClientRect();
  var body = document.body; var docElem = document.documentElement; var scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop;
@@ -23458,20 +23508,25 @@ new_layer_MyLocationIntervalTrack.addFeatures(lineTr);
 }
 function GetMyGeoLocation()
 {
-if (navigator.geolocation)     {     navigator.geolocation.getCurrentPosition(showPosition,showError);     }   
+if (navigator.geolocation)     {     navigator.geolocation.getCurrentPosition(showPosition,showError2,{enableHighAccuracy:true, maximumAge: 0, timeout: 6000 });     }   
 else{alert("Geolocation is not supported by this browser.");return;}   
 }
 function showPosition(position)   
-{  var lat=position.coords.latitude;   var lon=position.coords.longitude;  var alt=position.coords.altitude; var sp=position.coords.speed; var timeS=new Date(position.timestamp);
-var new_pos=new OpenLayers.LonLat(lon,lat).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
-points=new OpenLayers.Geometry.Point(new_pos.lon, new_pos.lat);
-var first_point= new OpenLayers.Feature.Vector(points);
-var ArrayFeatures=[];var now=timeS;
-var Y=now.getFullYear();
+{  if(position.coords)
+{var lat=position.coords.latitude;   var lon=position.coords.longitude;  var alt=position.coords.altitude; var sp=position.coords.speed; var timeS=new Date(position.timestamp);
+var now=timeS;var Y=now.getFullYear();
 var M=now.getMonth()+1;if(parseInt(M)<10){M='0'+M;}var D=now.getDate();if(parseInt(D)<10){D='0'+D;}
 var H=now.getHours();if(parseInt(H)<10){H='0'+H;}var MM=now.getMinutes();if(parseInt(MM)<10){MM='0'+MM;}
 var S=now.getSeconds();if(parseInt(S)<10){S='0'+S;}var neD=Y+'-'+M+'-'+D+'T'+H+':'+MM+':'+S;
-var attr={};attr.latitude=lat; attr.longitude=lon;attr.altitude=alt;attr.speed=sp;attr.time=neD;
+}
+else
+{position=position.split(",");var lat=parseFloat(position[0]);  var lon=parseFloat(position[1]);  var alt=parseFloat(position[2]); var sp=parseFloat(position[3]); var timeS=position[4];var neD=timeS.split(" ")[0]+"T"+timeS.split(" ")[1];}
+
+var new_pos=new OpenLayers.LonLat(lon,lat).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
+points=new OpenLayers.Geometry.Point(new_pos.lon, new_pos.lat);
+var first_point= new OpenLayers.Feature.Vector(points);
+var ArrayFeatures=[];
+var attr={};attr.latitude=lat; attr.longitude=lon;attr.altitude=alt;attr.speed=sp;attr.speed_kmh=sp*3.6;attr.time=neD; 
 first_point.attributes=attr;
 ArrayFeatures.push(first_point);
 
@@ -23505,10 +23560,21 @@ function showError(error)
      case error.POSITION_UNAVAILABLE:       alert("Location information is unavailable.");       break; 
     case error.TIMEOUT:       /*alert("The request to get user location timed out."); */try{ GetForcedDataGPSj(); }catch(e){}    break;  
    case error.UNKNOWN_ERROR:       alert("An unknown error occurred.");       break;     }   }
+   function showError2(error)   
+{   switch(error.code)      
+{     case error.PERMISSION_DENIED:       alert("User denied the request for Geolocation.");       break;
+     case error.POSITION_UNAVAILABLE:       alert("Location information is unavailable.");       break; 
+    case error.TIMEOUT:       /*alert("The request to get user location timed out."); */try{ GetForcedDataGPSj2(); }catch(e){}    break;  
+   case error.UNKNOWN_ERROR:       alert("An unknown error occurred.");       break;     }   }
 function GetForcedDataGPSj()
 {
 position=AndroidFunction.GetForced_GPSdata();
 showPositionInterval(position);
+}
+function GetForcedDataGPSj2()
+{
+position=AndroidFunction.GetForced_GPSdata();
+showPosition(position);
 }
 
 function OpenTableOWG()

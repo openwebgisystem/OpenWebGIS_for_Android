@@ -76,7 +76,31 @@ border-color:#ddd #333 #333 #ddd;border-style:solid;border-width:1px;
 box-shadow: inset rgba(0,0,0,.6) 0 -1px 3px, inset rgba(252,255,255,.7) 0 3px 3px, rgba(0,0,0,.8) 0 3px 3px -1px;
 border-radius: 15px;
 }
+.NewInterfaceclass {
+height:30px;
+border-color:#50F078 #9bb838 #9bb838 #50F078;
+border-style:solid;border-width:1px;background:#50F078;
+position:relative;top:-130px;left:800px;cursor:pointer;
+box-shadow: inset rgba(0,0,0,.6) 0 -1px 3px, inset rgba(252,255,255,.7) 0 3px 3px, rgba(0,0,0,.8) 0 3px 3px -1px;
+border-radius: 15px;
+}
 
+.NewInterfaceclass:hover {
+border-color:#FFCC66 #FFFF99 #FFFF99 #FFCC66;
+border-style:solid;border-width:1px;background:#FFFF99;
+box-shadow: inset rgba(0,0,0,.6) 0 -1px 3px, inset rgba(252,255,255,.7) 0 3px 3px, rgba(0,0,0,.8) 0 3px 3px -1px;
+border-radius: 15px;
+}
+.NewInterfaceclass:focus {
+background:#ddd;border-color:#ddd #333 #333 #ddd;border-style:solid;border-width:1px;
+box-shadow: inset rgba(0,0,0,.6) 0 -1px 3px, inset rgba(252,255,255,.7) 0 3px 3px, rgba(0,0,0,.8) 0 3px 3px -1px;
+border-radius: 15px;
+}
+.NewInterfaceclass:active {background:#ff0000;
+border-color:#ddd #333 #333 #ddd;border-style:solid;border-width:1px;
+box-shadow: inset rgba(0,0,0,.6) 0 -1px 3px, inset rgba(252,255,255,.7) 0 3px 3px, rgba(0,0,0,.8) 0 3px 3px -1px;
+border-radius: 15px;
+}
 .SearchHclass {
 height:15px;
 border-color:#50F078 #9bb838 #9bb838 #50F078;
@@ -899,7 +923,11 @@ AlertWait2.style.zIndex="10000";
 AlertWait2.style.display="none";
 document.getElementById("map").appendChild(AlertWait2);
 if(localStorage["bodyColor"])
-{document.body.style.backgroundColor=localStorage["bodyColor"];
+{
+if(localStorage["changeMenubrYes"])
+{if(localStorage["changeMenubrYes"]=='changeMenubrYes'){changeMenu();}}
+if(localStorage["NewInterface"]=="yes"){changeMenu();;Change_InterfaceNew();}
+document.body.style.backgroundColor=localStorage["bodyColor"];
 document.getElementById("map").style.width=localStorage["mapWidth"];
 document.getElementById("map").style.height=localStorage["mapHeight"];
 document.getElementById("mapResize").style.left=localStorage["mapLeft"];
@@ -922,8 +950,7 @@ document.getElementById("OpenStreetMapIdSearch").style.left=localStorage["OpenSt
 document.getElementById("OpenStreetMapIdSearch").style.top=localStorage["OpenStreetMapIdSearchTop"];
 document.getElementById("OpenWikipediaSearch").style.left=localStorage["OpenWikipediaSearchLeft"];
 document.getElementById("OpenWikipediaSearch").style.top=localStorage["OpenWikipediaSearchTop"];
-if(localStorage["changeMenubrYes"])
-{if(localStorage["changeMenubrYes"]=='changeMenubrYes'){changeMenu();}}
+
 }
 else
 {
@@ -3436,7 +3463,147 @@ function AndroidFileChooser() {
  {AndroidfileZIP='';try{ AndroidfileZIP=AndroidFunction.setAndroidfileZIPand();/*alert(AndroidfileZIP.split("StartlayerWMS")[0]);*/}catch(e){AndroidfileZIP='';}}
 function setAndroidfileZIPvarName(newname)
 {try{ AndroidfileZIPname=newname.split(".")[0];}catch(e){AndroidfileZIPname='newLayer';}}
+function GBIFMapdatabase()
+{
+var bbox = document.getElementById("map").getBoundingClientRect(); var body = document.body; var docElem = document.documentElement;
+ var scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop; var scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft;
+ var clientTop = docElem.clientTop || body.clientTop || 0; var clientLeft = docElem.clientLeft || body.clientLeft || 0;
+ var topTop = bbox.top + scrollTop - clientTop; var leftLeft = bbox.left + scrollLeft - clientLeft;
+var DivEditeLeg=document.createElement("div");
+DivEditeLeg.id="id_GBIFMapMain2";
+DivEditeLeg.className="id_divRoutLegMain";
+DivEditeLeg.style.position="relative";
+DivEditeLeg.innerHTML='<div id="id_divGBIFLeg" style="background:#ffffff; color:#0000ff;z-index: 6000;position:absolute;left:'+Math.round(leftLeft+50)+'px;top:'+Math.round(topTop-150)+
+'px;overflow:hidden; border: 1px solid black;"><img onclick="closeGBIFDBWin()" src="openlayers/theme/default/img/close.gif" style="position:relative; top:10px;float:right; cursor:pointer"><a style="position:relative; top:20px"></a>'+
+'<a style="font-size: 9px;"> you can move this window if you select menu item Interface/switch to interface drag</a><br>'+
+'<a>Information provided by:</a><br> <a href="http://www.gbif.org/what-is-gbif" target="_blank">The Global Biodiversity Information Facility (GBIF)</a><br>'+
+'<a>Insert Name:</a><br>'+
+'scientific name:<textarea title="" type="text" size="45" id="id_GBIFnameAtl2" value="" style="height:20px; width:200px"></textarea><br>'+
+/*'<input title="coordinate of the lower left corner.You can click on the map or type manually. Coordinates are inserted after clicking on the map if this value is equal to zero or empty" type="text" size="8" id="first_longOSM" value="0"/>lower left longitude, you can click on the map<br>'+
+'<input title="coordinate of the lower left corner" type="text" size="8" id="first_latOSM" value="0"/>lower left latitude<br>'+
+'<input title="coordinate of the upper-right corner.You can click on the map or type manually. Coordinates are inserted after clicking on the map if this value is equal to zero or empty" type="text" size="8" id="sec_longOSM" value="0"/>upper right longitude<br>'+'<input title="coordinate of the upper-right corner" type="text" size="8" id="sec_latOSM" value="0"/>upper right latitude<br>'+*/
+'<a>limit:</a><input type="text" size="10" id="id_limitGBIFLayer" title="Insert limit" value="50"/><br>'+
+'<input type="checkbox" id="id_checkCoordGBIF" title="" value="checkbox"/><a style="font-size: 12px;">Analyse rectangle region</a><br>'+
+'<a>Geographic Region:</a><br>'+
+'<input title="coordinate of the lower left corner.You can click on the map or type manually. Coordinates are inserted after clicking on the map if this value is equal to zero or empty" type="text" size="8" id="first_longGBIF" value="0"/>lower left longitude, you can click on the map<br>'+
+'<input title="coordinate of the lower left corner" type="text" size="8" id="first_latGBIF" value="0"/>lower left latitude<br>'+
+'<input title="coordinate of the upper-right corner.You can click on the map or type manually. Coordinates are inserted after clicking on the map if this value is equal to zero or empty" type="text" size="8" id="sec_longGBIF" value="0"/>upper right longitude<br>'+'<input title="coordinate of the upper-right corner" type="text" size="8" id="sec_latGBIF" value="0"/>upper right latitude<br>'+
+'<a>insert name of Layer:</a><input type="text" size="35" id="id_textGBIFLayer" title="Insert name of layer" value="GBIF_DB"/><br>'+
+'<input type="checkbox" id="Id_GBIFlinkWikim" value="checkbox"/>add link of wikimedia.org to attributes or<br>'+
+'<input type="checkbox" id="Id_GBIFlinkWiki" value="checkbox"/>add link of wikipedia to attributes<br>'+
+'<input type="checkbox" id="Id_GBIFlinkImage" checked value="checkbox"/>add images'+
+'<p> <button type=button onclick=GBIFMapdatabase2()>OK</button></p><div id="waitGBIFDB"></div>'+
+'<div id="id_GBIFtypetags2" ; style="overflow: auto;height: 150px;display:none; border: 1px #000;"></div>'+
+'</div>';
+if(!document.getElementById("id_GBIFMapMain2"))
+{body.appendChild(DivEditeLeg); 
+OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
+defaultHandlerOptions: {'single': true,'double': false,'pixelTolerance': 0,'stopSingle': false,'stopDouble': false},
+initialize: function(options) {this.handlerOptions = OpenLayers.Util.extend({}, this.defaultHandlerOptions);OpenLayers.Control.prototype.initialize.apply(this, arguments); 
+this.handler = new OpenLayers.Handler.Click(this, {'click': this.trigger}, this.handlerOptions);}, 
+trigger: function(e) {var lonlat = map.getLonLatFromPixel(e.xy);
+var new_pos=new OpenLayers.LonLat(lonlat.lon,lonlat.lat).transform(
+map.getProjectionObject(),new OpenLayers.Projection("EPSG:4326"));
+if(document.getElementById("first_longGBIF"))
+{if(document.getElementById("first_longGBIF").value==''||document.getElementById("first_longGBIF").value=='0')
+{document.getElementById("first_longGBIF").value=new_pos.lon;
+document.getElementById("first_latGBIF").value=new_pos.lat;}
+else{
+if(document.getElementById("sec_longGBIF").value==''||document.getElementById("sec_longGBIF").value=='0')
+{document.getElementById("sec_longGBIF").value=new_pos.lon;
+document.getElementById("sec_latGBIF").value=new_pos.lat;}}
+}  }
+});
+var clickGBIFDBCoordinates = new OpenLayers.Control.Click();
+clickGBIFDBCoordinates.title="Download this bounding box from the GBIF database";
+ map.addControl(clickGBIFDBCoordinates);
+clickGBIFDBCoordinates.activate();
+document.getElementById("id_GBIFMapMain2").onmousedown=function(event){drags(event)};
+document.getElementById("id_GBIFMapMain2").onmouseup=function(e){enddrag()};}
+}
+function GBIFMapdatabase2()
+{
+var waitosm=document.createElement('a');waitosm.id="id_waitGBIF2";waitosm.innerHTML="Wait...";document.getElementById("waitGBIFDB").appendChild(waitosm);waitosm.style.fontSize="15px";
+myUrl=document.getElementById("id_GBIFnameAtl2").value; var limit=document.getElementById("id_limitGBIFLayer").value;
+var l1=document.getElementById("first_longGBIF").value;var lat1=document.getElementById("first_latGBIF").value;var l2=document.getElementById("sec_longGBIF").value;var lat2=document.getElementById("sec_latGBIF").value;
+var latf='';var lats='';var lonf='';var lons='';
+if(document.getElementById("id_checkCoordGBIF").checked==true){latf=lat1;lats=lat2; lonf=l1;lons=l2}
+myUrl=encodeURIComponent(myUrl); var strand='';var myUrl2='scientificName='+myUrl;
+if(document.getElementById("id_GBIFnameAtl2").value==''){myUrl2='';}else{strand='&';}
+if(document.getElementById("Id_GBIFlinkWikim").checked==true&&document.getElementById("Id_GBIFlinkWiki").checked==true)
+{alert("select only wikimedia or only wikipedia link"); if(document.getElementById("id_waitGBIF2")){document.getElementById("id_waitGBIF2").parentNode.removeChild(document.getElementById("id_waitGBIF2"))}return;}
+try {var xmlhttp =new XMLHttpRequest();}
+catch (e) {alert("error");}
+//xmlhttp.open('GET','/glob_biodiv.php?n='+myUrl+'&limit='+limit+"&latf="+latf+"&lats="+lats+"&lonf="+lonf+"&lons="+lons+'&rand='+Math.random(), true);
+if(document.getElementById("id_checkCoordGBIF").checked==false)
+{xmlhttp.open('GET','http://api.gbif.org/v1/occurrence/search?'+myUrl2+strand+'limit='+limit, true);}
+else
+{if(latf==''||lats==''||lonf==''||lons==''){alert("Please, insert coordinates");return;}
+xmlhttp.open('GET','http://api.gbif.org/v1/occurrence/search?'+myUrl2+strand+'decimalLatitude='+latf+","+lats+"&decimalLongitude="+lonf+","+lons+'&limit='+limit, true);
+}
 
+
+xmlhttp.setRequestHeader("Cache-Control", "no-cache");
+xmlhttp.setRequestHeader("Content-type", "text/xml");
+xmlhttp.onreadystatechange = function()
+{if(xmlhttp.readyState == 4&&xmlhttp.status == 200) {
+if(xmlhttp==''){alert('no data');return;}
+var err=xmlhttp.responseText.indexOf("cURL Error:");
+if(err!=-1){alert("No data or time out. Please try again");if(document.getElementById("id_waitGBIF2")){document.getElementById("id_waitGBIF2").parentNode.removeChild(document.getElementById("id_waitGBIF2"))}return;}
+try {var arrPointj=JSON.parse(xmlhttp.responseText);rtt=arrPointj;if (arrPointj.results.length==0){alert("no data");}
+var arrfirst_point=[];
+var obj = {};
+   for(var g=0; g<arrPointj.results.length; g++) {
+for(h in arrPointj.results[g]){var str=h;
+obj[str] = true; }
+  }
+for(var bb=0;bb<arrPointj.results.length;bb++)
+{ 
+var new_pos2=new OpenLayers.LonLat(arrPointj.results[bb].decimalLongitude,arrPointj.results[bb].decimalLatitude).transform(
+new OpenLayers.Projection("EPSG:4326"),
+map.getProjectionObject());
+var point=new OpenLayers.Geometry.Point(new_pos2.lon, new_pos2.lat)
+var first_point= new OpenLayers.Feature.Vector(point);
+///////////////
+var NewAttr={};for(h in obj)
+{ for (ag in arrPointj.results[bb]) 
+{if(h==ag) {NewAttr[h]=arrPointj.results[bb][ag]; 
+if(h=='media'&&document.getElementById("Id_GBIFlinkImage").checked==true){
+var img1='';var imgn='';if(NewAttr[h][0]&&NewAttr[h][0].identifier){img1='<a href="'+NewAttr[h][0].identifier+'" target="_blank"><img onclick="" src="'+NewAttr[h][0].identifier+'" title="foto creator: '+NewAttr[h][0].creator+'" height="100" width="200"></a><br>'}else{if(NewAttr[h][0]&&NewAttr[h][0].references){img1='<a href="'+NewAttr[h][0].references+'" target="_blank">'+'foto1'+'</a><br>';}}
+for (var y=1;y<NewAttr[h].length;y++){var linkg='';if(NewAttr[h][y].identifier){linkg=NewAttr[h][y].identifier};if(NewAttr[h][y].references){linkg=NewAttr[h][y].references}
+var yi=y+1;imgn+='<a href="'+linkg+'" target="_blank">'+'foto'+yi+' '+'</a>';}NewAttr[h]=img1+imgn;}
+if(document.getElementById("Id_GBIFlinkWikim").checked==true||document.getElementById("Id_GBIFlinkWiki").checked==true)
+{if(document.getElementById("Id_GBIFlinkWikim").checked==true){if(h=="species"||h=='kingdom'||h=='phylum'||h=='order'||h=='family'||h=='genus')
+{NewAttr[h]='<a href="https://species.wikimedia.org/wiki/'+NewAttr[h]+'" target="_blank">'+NewAttr[h]+'</a>'}}
+if(document.getElementById("Id_GBIFlinkWiki").checked==true){if(h=="species"||h=='kingdom'||h=='phylum'||h=='order'||h=='family'||h=='genus')
+{NewAttr[h]='<a href="https://en.wikipedia.org/wiki/'+NewAttr[h]+'" target="_blank">'+NewAttr[h]+"</a>"}}
+} }
+else{if(NewAttr[h]){}else{NewAttr[h]=''};} ;  
+}     }
+/////////////////////
+first_point.attributes=NewAttr;
+arrfirst_point.push(first_point);
+};
+var new_GBIF = new OpenLayers.Layer.Vector(document.getElementById("id_textGBIFLayer").value,{renderers:["Canvas", "SVG", "VML"]});
+new_GBIF.addFeatures(arrfirst_point);
+var new_style_layer= new OpenLayers.Style({
+ pointRadius: 3, fillColor: "#FF9000", strokeColor: "#FF9000", strokeWidth: 1,fillOpacity:1, strokeOpacity:1 });
+ var selStyle = new OpenLayers.Style({ pointRadius: 5,  fillColor: "#ffaa00",
+ strokeColor: "#00DDFF", strokeWidth:2,fillOpacity:1, strokeOpacity:1 }); 
+new_GBIF.styleMap=new OpenLayers.StyleMap({'default':new_style_layer,'select': selStyle});
+new_GBIF.events.register("loadstart",new_GBIF, function() {WaitWindow();});
+map.addLayer(new_GBIF);
+new_GBIF.events.register("loadend",new_GBIF, function() {if(popup_Wait){try{popup_Wait.destroy();}catch(e){};} });
+ var t=document.createElement('option');
+t.value=new_GBIF.name;
+t.text=new_GBIF.name;
+document.getElementById("editL1").appendChild(t);
+if(document.getElementById("id_waitGBIF2")){document.getElementById("id_waitGBIF2").parentNode.removeChild(document.getElementById("id_waitGBIF2"))}
+}
+catch (e) {alert(e);return;}
+}}
+xmlhttp.send(null);
+}
 function OpenSreetMapdatabase()
 {
 var bbox = document.getElementById("map").getBoundingClientRect();
@@ -13629,6 +13796,7 @@ DivEditeLeg.innerHTML='<div id="id_divPaleBioLeg" style="background:#ffffff; col
 '<input type="checkbox" id="Id_PaleolinkWiki" value="checkbox"/>add link of wikipedia to attributes<br>'+
 '<input type="checkbox" id="Id_PaleolinkWiki1" value="checkbox"/>add general comments about the geology of the collection site<br>'+
 '<input type="checkbox" id="Id_PaleolinkWiki2" value="checkbox"/>add detailed description of the collection site in terms of lithology<br>'+
+'<input type="checkbox" id="Id_PaleolinkFieldun" checked value="checkbox"/>do not show fields with undefined information<br>'+
 '<p> <button type=button onclick=OK_PaleoBase()>OK</button></p><div id="waitPaleoBio"></div></div>';
 if(!document.getElementById("id_PaleBioLegMain2"))
 {body.appendChild(DivEditeLeg); }
@@ -13642,11 +13810,12 @@ this.value = new OpenLayers.Format.WKT().write(FeatClone)}}
 
 try {var xmlhttp =new XMLHttpRequest();}
 catch (e) {alert("error");return;}
-myUrl='http://paleobiodb.org/data1.1/intervals/list.json?scale=all&limit=all&showsource';
-myUrl=encodeURIComponent(myUrl);
-xmlhttp.open('GET','/temp.php?c='+myUrl+'&rand='+Math.random(), true);
-xmlhttp.setRequestHeader("Cache-Control", "no-cache");
-xmlhttp.setRequestHeader("Content-type", "text/xml");
+myUrl='https://paleobiodb.org/data1.2/intervals/list.json?scale=all&limit=all';
+//myUrl=encodeURIComponent(myUrl);
+//xmlhttp.open('GET','/wms.php?c='+myUrl+'&rand='+Math.random(), true);
+xmlhttp.open('GET', myUrl, true);
+//xmlhttp.setRequestHeader("Cache-Control", "no-cache");
+//xmlhttp.setRequestHeader("Content-type", "text/xml");
 xmlhttp.onreadystatechange = function()
 {if(xmlhttp.readyState == 4&&xmlhttp.status == 200) {
 if(xmlhttp.responseText==''){alert("no data");return;}
@@ -13671,9 +13840,7 @@ wrapper.appendChild(sorted[i].element);
 }
 document.getElementById("id_TimePaleoB")[1].selected=true;
 } }
-alert("This function works only in online web version of OpenWebGIS")
-{return;
-xmlhttp.send(null);}
+xmlhttp.send(null);
 
 
 }
@@ -13698,15 +13865,19 @@ if(document.getElementById("id_fromPaleoBiolEarly_age").value!=='')
 {earlyAge1='max_ma='+document.getElementById("id_fromPaleoBiolEarly_age").value;arrayStrPaleo.push(earlyAge1);}
 if(document.getElementById("id_toPaleoBiolEarly_age").value!=='')
 {earlyAge2='min_ma='+document.getElementById("id_toPaleoBiolEarly_age").value;arrayStrPaleo.push(earlyAge2);}
-if(earlyAge1!==''&&timeinter!==''){alert("you can not include more than one of 'interval'.Select only Time Interval or temporal locality (in Ma)");return;}
+if(earlyAge1!==''&&timeinter!==''){alert("you can not include more than one of 'interval'. Select only Time Interval or temporal locality (in Ma)");if(document.getElementById("a_waitPaleoBio")){document.getElementById("a_waitPaleoBio").parentNode.removeChild(document.getElementById("a_waitPaleoBio"))};return;}
 var queryStr=arrayStrPaleo.join('&');
-myUrl='http://paleobiodb.org/data1.1/occs/list.json?limit='+resultC+'&'+queryStr+'&show=loc,time,prot,ident,strat,phylo,coords,entname,lith,geo';
+//myUrl='http://paleobiodb.org/data1.1/occs/list.json?limit='+resultC+'&'+queryStr+'&show=loc,time,prot,ident,strat,phylo,coords,entname,lith,geo';
 
-myUrl=encodeURIComponent(myUrl);
+//myUrl=encodeURIComponent(myUrl);
 
-xmlhttp.open('GET','/temp.php?c='+myUrl+'&rand='+Math.random(), true);
-xmlhttp.setRequestHeader("Cache-Control", "no-cache");
-xmlhttp.setRequestHeader("Content-type", "text/xml");
+//xmlhttp.open('GET','/wms.php?c='+myUrl+'&rand='+Math.random(), true);
+myUrl='https://paleobiodb.org/data1.2/occs/list.json?limit='+resultC+'&'+queryStr+'&show=full';
+
+xmlhttp.open('GET',myUrl, true);
+/*xmlhttp.setRequestHeader("Cache-Control", "no-cache");
+ xmlhttp.setRequestHeader("Access-Control-Allow-Origin","*");
+xmlhttp.setRequestHeader("Content-type", "text/xml");*/
 xmlhttp.onreadystatechange = function()
 {if(xmlhttp.readyState == 4&&xmlhttp.status == 200) {//myUrl=xmlhttp.responseText;
 if(document.getElementById("a_waitPaleoBio")){document.getElementById("a_waitPaleoBio").parentNode.removeChild(document.getElementById("a_waitPaleoBio"))}
@@ -13767,15 +13938,36 @@ first_point.attributes["enterer"]=first_point.attributes["ent"];first_point.attr
 first_point.attributes["genus_reso"]=first_point.attributes["rst"];first_point.attributes["county"]=first_point.attributes["cny"];
 first_point.attributes["matched_name"]=first_point.attributes["mna"];first_point.attributes["protected"]=first_point.attributes["ptd"];
 first_point.attributes["species_reso"]=first_point.attributes["rss"];first_point.attributes["late_interval"]=first_point.attributes["oli"];
-first_point.attributes["lithology2"]=first_point.attributes["lt2"];
-first_point.attributes["lithology1"]=first_point.attributes["lt1"];
-first_point.attributes["environment"]=first_point.attributes["env"];
-first_point.attributes["lithification1"]=first_point.attributes["lf1"];
-first_point.attributes["lithification2"]=first_point.attributes["lf2"];
-first_point.attributes["minor_lithology2"]=first_point.attributes["lm2"];
-first_point.attributes["minor_lithology1"]=first_point.attributes["lm1"];
-first_point.attributes["tectonic_setting"]=first_point.attributes["tec"];
+first_point.attributes["lithology2"]=first_point.attributes["lt2"];first_point.attributes["lithology1"]=first_point.attributes["lt1"];
+first_point.attributes["environment"]=first_point.attributes["env"];first_point.attributes["lithification1"]=first_point.attributes["lf1"];
+first_point.attributes["lithification2"]=first_point.attributes["lf2"];first_point.attributes["minor_lithology2"]=first_point.attributes["lm2"];
+first_point.attributes["minor_lithology1"]=first_point.attributes["lm1"];first_point.attributes["tectonic_setting"]=first_point.attributes["tec"]; 
 
+first_point.attributes["identified_name"]=first_point.attributes["idn"];first_point.attributes["identified_no"]=first_point.attributes["iid"];
+first_point.attributes["difference"]=first_point.attributes["tdf"];first_point.attributes["ref_author"]=first_point.attributes["aut"];
+first_point.attributes["ref_pubyr"]=first_point.attributes["pby"];first_point.attributes["genus"]=first_point.attributes["gnl"]; 
+first_point.attributes["abund_value"]=first_point.attributes["abv"];first_point.attributes["abund_unit"]=first_point.attributes["abu"];
+first_point.attributes["state"]=first_point.attributes["stp"];first_point.attributes["geogcomments"]=first_point.attributes["ggc"];
+first_point.attributes["paleomodel"]=first_point.attributes["pm1"];first_point.attributes["paleolng"]=first_point.attributes["pln"];
+first_point.attributes["paleolat"]=first_point.attributes["pla"];first_point.attributes["geoplate"]=first_point.attributes["gpl"];
+first_point.attributes["stratscale"]=first_point.attributes["ssc"];first_point.attributes["lithadj1"]=first_point.attributes["la1"];
+first_point.attributes["fossilsfrom1"]=first_point.attributes["ff1"];first_point.attributes["lithadj2"]=first_point.attributes["la2"];
+first_point.attributes["motility"]=first_point.attributes["jmo"];first_point.attributes["life_habit"]=first_point.attributes["jlh"];
+first_point.attributes["diet"]=first_point.attributes["jdt"];first_point.attributes["composition"]=first_point.attributes["jco"];
+first_point.attributes["architecture"]=first_point.attributes["jsa"];first_point.attributes["thickness"]=first_point.attributes["jth"];
+first_point.attributes["collection_type"]=first_point.attributes["cct"];first_point.attributes["collection_methods"]=first_point.attributes["ccx"];
+first_point.attributes["collection_coverage"]=first_point.attributes["ccv"];first_point.attributes["collection_size"]=first_point.attributes["ccs"];
+first_point.attributes["stratcomments"]=first_point.attributes["scm"];first_point.attributes["fossilsfrom2"]=first_point.attributes["ff2"];
+first_point.attributes["collectors"]=first_point.attributes["ccc"];first_point.attributes["collection_dates"]=first_point.attributes["ccd"];
+first_point.attributes["museum"]=first_point.attributes["ccu"];first_point.attributes["collection_comments"]=first_point.attributes["ccm"];
+first_point.attributes["identified_rank"]=first_point.attributes["idr"];first_point.attributes["taxonomy_comments"]=first_point.attributes["tcm"];
+first_point.attributes["preservation"]=first_point.attributes["prs"];first_point.attributes["localsection"]=first_point.attributes["sls"];
+first_point.attributes["localbed"]=first_point.attributes["slb"];first_point.attributes["localorder"]=first_point.attributes["slo"];
+first_point.attributes["rock_censused"]=first_point.attributes["ccr"];first_point.attributes["zone"]=first_point.attributes["szn"];
+first_point.attributes["regionalorder"]=first_point.attributes["sro"];first_point.attributes["regionalbed"]=first_point.attributes["srb"];
+first_point.attributes["regionalsection"]=first_point.attributes["srs"];
+ 
+if(document.getElementById("Id_PaleolinkFieldun").checked==true){for (hh in first_point.attributes){if(first_point.attributes[hh]==undefined){delete first_point.attributes[hh]}}  }
 if(document.getElementById("Id_PaleolinkWiki1").checked==true){first_point.attributes["geology_comments"]=first_point.attributes["gcm"]}
 if(document.getElementById("Id_PaleolinkWiki2").checked==true){first_point.attributes["lithdescript"]=first_point.attributes["ldc"]}
 delete first_point.attributes["oid"];delete first_point.attributes["typ"];delete first_point.attributes["eid"];delete first_point.attributes["cid"];
@@ -13789,16 +13981,28 @@ delete first_point.attributes["ent"];delete first_point.attributes["mdf"];delete
 delete first_point.attributes["mna"];delete first_point.attributes["ptd"];delete first_point.attributes["rss"];delete first_point.attributes["oli"];
 delete first_point.attributes["sfm"]; delete first_point.attributes["sgr"];
 delete first_point.attributes["smb"];delete first_point.attributes["odn"];delete first_point.attributes["odl"];delete first_point.attributes["idf"];
-delete first_point.attributes["mra"];
-delete first_point.attributes["lt2"];delete first_point.attributes["lt1"];delete first_point.attributes["env"];delete first_point.attributes["lf1"];delete first_point.attributes["lf2"];delete first_point.attributes["lm1"]; delete first_point.attributes["lm2"];
-delete first_point.attributes["tec"];
-delete first_point.attributes["gcm"]
-delete first_point.attributes["ldc"]
+delete first_point.attributes["mra"];delete first_point.attributes["lt2"];delete first_point.attributes["lt1"];delete first_point.attributes["env"];delete first_point.attributes["lf1"];delete first_point.attributes["lf2"];delete first_point.attributes["lm1"]; delete first_point.attributes["lm2"];delete first_point.attributes["tec"];delete first_point.attributes["gcm"];delete first_point.attributes["ldc"]
+
+delete first_point.attributes["idn"];delete first_point.attributes["iid"];delete first_point.attributes["tdf"];delete first_point.attributes["aut"];
+delete first_point.attributes["pby"];delete first_point.attributes["gnl"]; delete first_point.attributes["abv"];delete first_point.attributes["abu"];
+delete first_point.attributes["stp"];delete first_point.attributes["ggc"];delete first_point.attributes["pm1"];delete first_point.attributes["pln"];
+delete first_point.attributes["pla"];delete first_point.attributes["gpl"];delete first_point.attributes["ssc"];delete first_point.attributes["la1"];
+delete first_point.attributes["ff1"];delete first_point.attributes["la2"];delete first_point.attributes["jmo"];delete first_point.attributes["jlh"];
+delete first_point.attributes["jdt"];delete first_point.attributes["jco"];delete first_point.attributes["jsa"];delete first_point.attributes["jth"];
+delete first_point.attributes["cct"];delete first_point.attributes["ccx"];delete first_point.attributes["ccv"];delete first_point.attributes["ccs"];
+delete first_point.attributes["scm"];delete first_point.attributes["ff2"];delete first_point.attributes["ccc"];delete first_point.attributes["ccd"];
+delete first_point.attributes["ccu"];delete first_point.attributes["ccm"];delete first_point.attributes["idr"];delete first_point.attributes["tcm"];
+delete first_point.attributes["prs"];delete first_point.attributes["sls"];delete first_point.attributes["slb"];delete first_point.attributes["slo"];
+delete first_point.attributes["ccr"];delete first_point.attributes["szn"];
+delete first_point.attributes["sro"];delete first_point.attributes["srb"];
+delete first_point.attributes["srs"];
+
+
 if(document.getElementById("Id_PaleolinkWiki").checked==true)
 {for (var i in first_point.attributes)
 {if(i=="order"||i=="subgenus_name"||i=="taxon_name"||i=="stratgroup"||i=="early_interval"||i=="state"||i=="country"||i=="species_name"||i=="family"||i=="class"||i=="late_interval"||i=="matched_name"||i=="county"||i=="phylum"||i=="genus_name"||i=="lithology2")
 {if (typeof first_point.attributes[i]=='undefined'){}else{ if(first_point.attributes[i]&&typeof(first_point.attributes[i])=="string"){var paleoStr=first_point.attributes[i].replace(/\s+/g, '_');}
-first_point.attributes[i]="<a href=https://en.wikipedia.org/wiki/"+paleoStr+" target=_blank>"+first_point.attributes[i]+'</a>';}}}
+first_point.attributes[i]='<a href="https://en.wikipedia.org/wiki/'+paleoStr+'" target="_blank">'+first_point.attributes[i]+'</a>';}}}
 
 }
 arrfirst_point.push(first_point);
@@ -13822,9 +14026,8 @@ document.getElementById("editL1").appendChild(t);
 }
 }
 
-alert("This function works only in online web version of OpenWebGIS")
-{return;
-xmlhttp.send(null);}
+
+xmlhttp.send(null);
 
 }
 function EarthquakesB()
@@ -14451,6 +14654,10 @@ document.getElementById("id_MonTempLegMain2").onmouseup=function(e){enddrag()};
 function closeOSMDBWin()
 {document.getElementById("id_OpenStreetMapMain2").parentNode.removeChild(document.getElementById("id_OpenStreetMapMain2"));
 for(var i=0;i<map.controls.length;i++){if(map.controls[i].title=="Download this bounding box from the OpenStreetMap database"){ map.controls[i].destroy();}} delete OpenLayers.Control.Click;
+}
+function closeGBIFDBWin()
+{document.getElementById("id_GBIFMapMain2").parentNode.removeChild(document.getElementById("id_GBIFMapMain2"));
+for(var i=0;i<map.controls.length;i++){if(map.controls[i].title=="Download this bounding box from the GBIF database"){ map.controls[i].destroy();}} delete OpenLayers.Control.Click;
 }
 function closeMTempWin()
 {document.getElementById("id_MonTempLegMain2").parentNode.removeChild(document.getElementById("id_MonTempLegMain2"));
@@ -23548,7 +23755,7 @@ var body = document.body; var docElem = document.documentElement;
 var DivEditeLeg=document.createElement("div");DivEditeLeg.id="id_tableOWG";
 DivEditeLeg.style.width=screen.width;DivEditeLeg.style.height=screen.height;
 DivEditeLeg.className="id_divRoutLegMain";DivEditeLeg.style.position="absolute";DivEditeLeg.style.display="block";DivEditeLeg.style.zIndex = 300000;DivEditeLeg.style.overflow="auto";DivEditeLeg.style.background="#ffffff";DivEditeLeg.style.border="2px solid black";DivEditeLeg.style.color="#000000";
-DivEditeLeg.style.left=Math.round(document.body.clientWidth/2-100);DivEditeLeg.style.top="0px";
+DivEditeLeg.style.left=Math.round(document.body.clientWidth/2+200);DivEditeLeg.style.top="0px";DivEditeLeg.style.height=Math.round(body.clientHeight)+250;DivEditeLeg.style.width=Math.round(body.clientWidth)+300;
 DivEditeLeg.innerHTML='<div class="blockbutOpen"><button type=button onclick=OpenTable()>Open table</button><button type=button display=none onclick=EditTable()>Edit table</button><div id="block_UpdateTable" class="blockUpdateTable"><button type=button onclick=UpdateTable()>Update</button></div></div><div class="ok"> <p> <button type=button onclick=OKclose()>Exit</button></p></div><center><font size=+3></font></center></div><div id="countRow"  class="blockRule" ><li> <a>count rows:</a><select id=pCount >  <option selected value="0">0</option><option value="1">1</option><option value="10">10</option><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="300">300</option><option value="500">500</option><option value="1000">1000</option><option value="1500">1500</option><option value="2000">2000</option><option value="3000">3000</option><option value="All">All</option></select><br><input id="select_feat_map_id" type="checkbox"  value="false"><a style="font-size:12px">select features on the map</a></li></div><div id="id_ChartBlock" class="ChartBlockAreaDiv"><canvas id=id_canvas1Chart width=1000px height=640px style="display:none; border: 2px double black;"></canvas></div><div id="table" class="blockTable"></div><div id="FieldTable"  class="blockFilter" ><li> <a>Field for filter:</a><div class="blockSort"><a>Sort by</a><br><input id="sortA" type="checkbox"  value="A"  onclick=SortA()>Ascending<br><input id="sortD" type="checkbox"  value="D" onclick=SortD()>Descending</div><select id=pFieldTable>  <option selected value="0">.</option></select></li><br><li> <a>Operator</a><select id=pOperTable>  <option selected value="0">.</option> <option value=">">></option> <option value="<"><</option> <option value=">=">>=</option> <option value="<="><=</option> <option value="==">=</option></select></li><br> <input id=pInputFilterTable type="text" size="15"><br><p> <button type=button onclick=Applyfilter()>Apply filter</button></p></div><div id="CalcText" class="blockTextCalculation"><a>Calculation</a><br><textarea rows="5" title="Names of all attributes must be put in square brackets. Name of the new attribute must be without any brackets. For example: calc=[LATITUDE]/[LONGITUDE]*100+[LATITUDE] . In this example  \calc\ is the new attribute(field). Note: new attributes are not saved in shapefile or database in web-server from which the Layer was created. In order to save it in web-server, you must use menu item \Export Layer\ gml or csv file, or create shapefile in other software and then upload it in web-server. Without this you can anyway use new attribute to change legend Layer, use in all calculations and create chart in new window.Also use the functions: Math.sin ([newField]), Math.abs ([newField]), Math.cos ([newField]), Math.random (), Math.exp (([newField]), Math.sqrt ([newField] ), Math.log ([newField]) - natural logarithm, Math.pow ([newField]), x) - exponentiation x. Example, newField = (Math.cos ([SomeField1]) / Math.abs ([SomeField2])) + Math.sqrt (16) - Math.sqrt ([SomeField3]). To round numbers, you can use the notation: newField = [newField] .toFixed (x), where x is the desired number of decimal places.You can also use special formulas: mean, min, max. To find the average value for all rows in a column (attribute) SomeField you need to write newField = mean (SomeField). The square brackets in the title of the column are not needed. To find the average value in the column SomeField1 for each unique column values SomeField2, you need to write newField = mean (SomeField2, SomeField1). Similarly newField = min (SomeField2, SomeField1) and newField = count (SomeField2, SomeField1). This is useful for example to calculate the minimum or maximum, quantity of some value within each year, if you have a layer containing information about many years." cols="25" id="textCalc" name="text"></textarea><br><button type=button onclick=ApplyCalc()>Apply Calculation</button><br><input type="checkbox" id="CheckSaveOldAtt" value="checkbox"/><font size="2">Save result (it does not work for the new attribute)</font><br><input type="checkbox" id="CheckSaveTextAtt" title="if activate this checkbox, then resulted attribute will be  strings concatenation. You must use apostrophe in both side of the string.Example: calc=[LATITUDE]+&#8217text&#8217, then if [LATITUDE]=24.5 -> calc=24.5text; but if string is a number you not may use apostrophe. Example:calc=24.5+3 then calc=24.53" value="checkbox"/><a title="if activate this checkbox, then resulted attribute will be  strings concatenation. You must use apostrophe in both side of the string.Example: calc=[LATITUDE]+&#8217text&#8217, then if [LATITUDE]=24.5 -> calc=24.5text; but if string is a number you not may use apostrophe. Example:calc=24.5+3 then calc=24.53"><font size="2">strings concatenation</a></font><br></div><div id="CharBlockMenu" class="blockChart"><a>Chart</a><br><div style="float:left"><a>Axis X</a><select id=fieldChartX> <option selected value="0">.</option> </select></div><div onclick="OptionFuncChart()" title="open options of chart" style="cursor:pointer;float:left"><img src="img/option.png"/  width="20" height="20"></div><br><div style="float:left"><a>Axis Y</a><select id=fieldChartY>  <option selected value="0">.</option> </select></div><br><div style="float:left"><a>Axis Z </a><select id=fieldChartZ>  <option selected value="0">.</option> </select></div><br> <div style="float:left"><a style="font-size: 11px;">label by interval in X</a><input id=id_IntervalX type="text" size="2" value="2"><a style="font-size: 11px;">sum by interval in X</a><input id=id_IntervalXs type="text" size="2" value="0"></div><br> <div style="float:right"><input id="id_repeatV" type="checkbox"  value="check">merge repeated values on axis X in single value</div><br> <div id="id_correlDiv" style="float:left"><input id="id_CorrRegV" type="checkbox"  value="check">get line regression equation(y/x)</div><br><button type=button onclick=ApplyChart()>Create Chart</button><button type=button onclick=RemoveChart()>Remove Chart</button></div>';
 if(!document.getElementById("id_tableOWG"))
 {body.appendChild(DivEditeLeg); initTable();
@@ -23638,6 +23845,121 @@ var graticuleCtl3;
 graticuleCtl2=graticuleCtl3;
 }
 }
+function Change_InterfaceNew()
+{document.getElementById("mapResize").style.top="-12px";
+document.getElementById("mapResize").style.left="-11px";
+document.getElementById("map").style.left="0px";
+document.getElementById("map").style.top="0px";
+document.getElementById("map").style.width=document.body.clientWidth;
+document.getElementById("map").style.height=document.body.clientHeight;
+if(map){map.updateSize();}else{ setTimeout(function(){map.updateSize()}, 2500)}
+document.getElementById("dragEditLayer").style.top=document.body.clientHeight-80;
+document.getElementById("dragEditLayer").style.left=0;
+document.getElementById("dragScale").style.display="none";
+document.getElementById("dragCoord").style.top=document.body.clientHeight-100;
+document.getElementById("dragCoord").style.left=0;
+document.getElementById("inf_contacts_id").style.top=document.body.clientHeight-100;
+document.getElementById("inf_contacts_id").style.left=250;
+document.getElementById("inf_contacts_id").style.zIndex=3000;
+var imgLogo=document.createElement("img");
+imgLogo.src="imgopen/opengis.png";
+imgLogo.width=150;imgLogo.height=75;
+imgLogo.style.position="absolute";imgLogo.id="imageNewInLogo";
+imgLogo.style.left=450;imgLogo.style.top=document.body.clientHeight-100;imgLogo.style.zIndex=3000;imgLogo.style.opacity="0.6";
+if(!document.getElementById("imageNewInLogo")){document.body.appendChild(imgLogo);}
+
+var newLayerDiv=document.createElement('div');
+newLayerDiv.id="InterNewLayList";newLayerDiv.style.height="25px";newLayerDiv.style.textAlign="center";newLayerDiv.innerHTML="Layers List";newLayerDiv.style.transitionDuration="0.5s";newLayerDiv.style.WebkitTransitionDuration="0.5s";newLayerDiv.style.color='rgb(132,132,132)';
+if(document.body.clientWidth<1550){newLayerDiv.style.top="30px"}else{newLayerDiv.style.top="0px";}newLayerDiv.style.left="90px";newLayerDiv.style.zIndex="9000";newLayerDiv.style.cursor="pointer";newLayerDiv.style.border="1px solid black";newLayerDiv.style.position="absolute";
+var bbox = document.getElementById("external_control2").getBoundingClientRect();;
+var layL=document.getElementById("drag");var addv=bbox.height+25;layL.style.top="-"+addv;
+layL.style.left="60px";layL.style.transitionDuration="0.5s"
+newLayerDiv.style.backgroundColor="rgba(219,221,214,0.8)";newLayerDiv.style.borderRadius = '8px'; newLayerDiv.style.WebkitBorderRadius = '8px'; 
+if(!document.getElementById("InterNewLayList")){document.body.appendChild(newLayerDiv);}
+newLayerDiv.onclick = function()
+{var bbox = document.getElementById("external_control2").getBoundingClientRect();var layL=document.getElementById("drag");var addv=bbox.height+25;
+
+if(document.body.clientWidth<1550)
+{if(layL.style.top=="30px"||layL.style.top=="30"||layL.style.top==30){newLayerDiv.style.left="90px"; layL.style.top="-"+addv; }
+else{newLayerDiv.style.left="90px";layL.style.top="30px";} }
+else
+{if(layL.style.top=="0px"||layL.style.top=="0"||layL.style.top==0){newLayerDiv.style.left="90px"; layL.style.top="-"+addv; }
+else{newLayerDiv.style.left="90px";layL.style.top="0px";} }}
+newLayerDiv.onmouseover=function(){newLayerDiv.style.color='rgb(0,0,255)';}
+newLayerDiv.onmouseout=function(){newLayerDiv.style.color='rgb(132,132,132)';}
+
+
+
+var newLayerDivM=document.createElement('div');changeMenu();
+newLayerDivM.id="InterNewMainMenu";newLayerDivM.style.height="25px";newLayerDivM.style.textAlign="center";newLayerDivM.innerHTML="Main Menu";newLayerDivM.style.transitionDuration="0.5s";newLayerDivM.style.WebkitTransitionDuration="0.5s";newLayerDivM.style.color='rgb(132,132,132)';
+
+if(document.body.clientWidth<1550){newLayerDivM.style.top="30px"}else{newLayerDivM.style.top="0px";}
+newLayerDivM.style.left="350px";newLayerDivM.style.zIndex="9000";newLayerDivM.style.cursor="pointer";newLayerDivM.style.border="1px solid black";newLayerDivM.style.position="absolute";
+
+var bbox = document.getElementById("id_menu").getBoundingClientRect();document.getElementById("id_menu").style.backgroundColor="rgba(152,225,114,0.7)"
+var layL=document.getElementById("dragMenu");var addv=bbox.height+20;layL.style.top="-"+addv;
+layL.style.left="270px";layL.style.transitionDuration="0.5s"
+newLayerDivM.style.backgroundColor="rgba(219,221,214,0.8)";newLayerDivM.style.borderRadius = '8px'; newLayerDivM.style.WebkitBorderRadius = '8px'; 
+if(!document.getElementById("InterNewMainMenu")){document.body.appendChild(newLayerDivM);}
+newLayerDivM.onclick = function()
+{var bbox = document.getElementById("id_menu").getBoundingClientRect();var layL=document.getElementById("dragMenu");var addv=bbox.height+20;
+if(document.body.clientWidth<1550)
+{if(layL.style.top=="30px"||layL.style.top=="30"||layL.style.top==30){newLayerDivM.style.left="350px"; layL.style.top="-"+addv; }
+else{newLayerDivM.style.left="350px";layL.style.top="30px";} }
+else
+{if(layL.style.top=="0px"||layL.style.top=="0"||layL.style.top==0){newLayerDivM.style.left="350px"; layL.style.top="-"+addv; }
+else{newLayerDivM.style.left="350px";layL.style.top="0px";}} }
+newLayerDivM.onmouseover=function(){newLayerDivM.style.color='rgb(0,0,255)';}
+newLayerDivM.onmouseout=function(){newLayerDivM.style.color='rgb(132,132,132)';}
+
+var newSearchODiv=document.createElement('div');
+ newSearchODiv.id="InterNewSearchO"; newSearchODiv.style.height="25px";  newSearchODiv.style.textAlign="center"; newSearchODiv.innerHTML="OpenStreetMap_Search:"; newSearchODiv.style.transitionDuration="0.5s"; newSearchODiv.style.WebkitTransitionDuration="0.5s";newSearchODiv.style.color='rgb(132,132,132)';
+
+if(document.body.clientWidth<1550){newSearchODiv.style.top="30px"}else{newSearchODiv.style.top="0px";}
+newSearchODiv.style.left="530px"; newSearchODiv.style.zIndex="9000"; newSearchODiv.style.cursor="pointer"; newSearchODiv.style.border="1px solid black"; newSearchODiv.style.position="absolute";
+var bbox = document.getElementById("OpenStreetMapIdSearch").getBoundingClientRect();
+var layL=document.getElementById("OpenStreetMapIdSearch");var addv=bbox.height;layL.style.top="-"+addv;
+layL.style.left="450px";layL.style.transitionDuration="0.5s"
+ newSearchODiv.style.backgroundColor="rgba(219,221,214,0.8)"; newSearchODiv.style.borderRadius = '8px';  newSearchODiv.style.WebkitBorderRadius = '8px'; 
+if(!document.getElementById("InterNewSearchO")){document.body.appendChild( newSearchODiv);}
+ newSearchODiv.onclick = function()
+{var bbox = document.getElementById("OpenStreetMapIdSearch").getBoundingClientRect();var layL=document.getElementById("OpenStreetMapIdSearch");var addv=bbox.height;
+if(document.body.clientWidth<1550)
+{
+if(layL.style.top=="55px"||layL.style.top=="55"||layL.style.top==55){newSearchODiv.style.left="530px"; layL.style.top="-"+addv; }
+else{newSearchODiv.style.left="450px";layL.style.top="55px";} }
+else
+{
+if(layL.style.top=="25px"||layL.style.top=="25"||layL.style.top==25){ newSearchODiv.style.left="530px"; layL.style.top="-"+addv; }
+else{ newSearchODiv.style.left="450px";layL.style.top="25px";} }
+
+}
+newSearchODiv.onmouseover=function(){newSearchODiv.style.color='rgb(0,0,255)';}
+newSearchODiv.onmouseout=function(){newSearchODiv.style.color='rgb(132,132,132)';}
+
+var  newSearchWDiv=document.createElement('div');
+  newSearchWDiv.id="InterNewSearchW";  newSearchWDiv.style.height="25px";   newSearchWDiv.style.textAlign="center";  newSearchWDiv.innerHTML="OpenStreetMap_Search:";  newSearchWDiv.style.transitionDuration="0.5s";  newSearchWDiv.style.WebkitTransitionDuration="0.5s";newSearchWDiv.style.color='rgb(132,132,132)';
+if(document.body.clientWidth<1550){newSearchWDiv.style.top="30px"}else{newSearchWDiv.style.top="0px";} 
+newSearchWDiv.style.left="800px";  newSearchWDiv.style.zIndex="9000";  newSearchWDiv.style.cursor="pointer";  newSearchWDiv.style.border="1px solid black";  newSearchWDiv.style.position="absolute";
+var bbox = document.getElementById("OpenWikipediaSearch").getBoundingClientRect();
+var layL=document.getElementById("OpenWikipediaSearch");var addv=bbox.height;layL.style.top="-"+addv;
+layL.style.left="700px";layL.style.transitionDuration="0.5s"
+  newSearchWDiv.style.backgroundColor="rgba(219,221,214,0.8)";  newSearchWDiv.style.borderRadius = '5px';   newSearchWDiv.style.WebkitBorderRadius = '5px'; 
+if(!document.getElementById("InterNewSearchW")){document.body.appendChild(  newSearchWDiv);}
+  newSearchWDiv.onclick = function()
+{var bbox = document.getElementById("OpenWikipediaSearch").getBoundingClientRect();var layL=document.getElementById("OpenWikipediaSearch");var addv=bbox.height;
+if(document.body.clientWidth<1550)
+{
+if(layL.style.top=="95px"||layL.style.top=="95"||layL.style.top==95){newSearchWDiv.style.left="800px"; layL.style.top="-"+addv; }
+else{newSearchWDiv.style.left="700px";layL.style.top="95px";} }
+else{
+if(layL.style.top=="65px"||layL.style.top=="65"||layL.style.top==65){  newSearchWDiv.style.left="800px"; layL.style.top="-"+addv; }
+else{  newSearchWDiv.style.left="700px";layL.style.top="65px";} }}
+newSearchWDiv.onmouseover=function(){newSearchWDiv.style.color='rgb(0,0,255)';}
+newSearchWDiv.onmouseout=function(){newSearchWDiv.style.color='rgb(132,132,132)';}
+
+
+}
 function SetDefaultInterface()
 {
 document.body.style.backgroundColor="rgb(153, 217, 234)";
@@ -23666,6 +23988,13 @@ document.getElementById("OpenWikipediaSearch").style.left="977px";
 var r=document.getElementById("id_block_menu"); 
 if(r&&r.childNodes[0].id&&r.childNodes[0].id=="changeMenubr_"+0)
 {changeMenu();}
+if(document.getElementById('InterNewLayList')){document.getElementById('InterNewLayList').parentNode.removeChild(document.getElementById('InterNewLayList'));}
+if(document.getElementById('InterNewMainMenu')){document.getElementById('InterNewMainMenu').parentNode.removeChild(document.getElementById('InterNewMainMenu'));}
+if(document.getElementById('InterNewSearchO')){document.getElementById('InterNewSearchO').parentNode.removeChild(document.getElementById('InterNewSearchO'));}
+if(document.getElementById('InterNewSearchW')){document.getElementById('InterNewSearchW').parentNode.removeChild(document.getElementById('InterNewSearchW'));}
+if(document.getElementById('imageNewInLogo')){document.getElementById('imageNewInLogo').parentNode.removeChild(document.getElementById('imageNewInLogo'));}
+map.updateSize();
+document.getElementById("inf_contacts_id").style.top="70px";document.getElementById("inf_contacts_id").style.left="210px";
 }
 function SaveInterface()
 {
@@ -23696,7 +24025,8 @@ var r=document.getElementById("id_block_menu");
 if(r&&r.childNodes[0].id&&r.childNodes[0].id=="changeMenubr_"+0)
 {localStorage["changeMenubrYes"]='changeMenubrYes';}
 else{localStorage["changeMenubrYes"]='changeMenubrNo';}
-
+if(document.getElementById('InterNewLayList')){localStorage["NewInterface"]="yes";}else{localStorage["NewInterface"]="no";}
+alert("Saved");
 }
 function SaveProject2()
 {
@@ -23859,6 +24189,7 @@ if(document.getElementById("id_LinkSaveInterface")&&document.getElementById("id_
 {
 var r=document.getElementById("id_block_menu"); var changeMenubr='cMenubrNo';
 if(r.childNodes[0].id&&r.childNodes[0].id=="changeMenubr_"+0){changeMenubr='cMenubrYes';}
+if(document.getElementById('InterNewLayList')){var NewInterface="NewInter_yes";}else{var NewInterface="NewInter_no";}
 DataProjectWebGis+=" InterfaceSave "+";"+document.body.style.backgroundColor+";"+document.getElementById("map").style.width+";"+document.getElementById("map").style.height+";"+
 document.getElementById("mapResize").style.left+";"+document.getElementById("mapResize").style.top+";"+document.getElementById("external_control2").style.backgroundColor+";"+
 document.getElementById("drag").style.top+";"+document.getElementById("drag").style.left+";"+document.getElementById("dragMenu").style.top+";"+
@@ -23866,7 +24197,7 @@ document.getElementById("dragMenu").style.left+";"+document.getElementById("id_m
 document.getElementById("dragEditLayer").style.left+";"+document.getElementById("dragCoord").style.top+";"+document.getElementById("dragCoord").style.left+";"+
 document.getElementById("dragScale").style.top+";"+document.getElementById("dragScale").style.left+";"+document.getElementById("dragToolbar_opt").style.top+";"+
 document.getElementById("dragToolbar_opt").style.left+";"+document.getElementById("OpenStreetMapIdSearch").style.left+";"+document.getElementById("OpenStreetMapIdSearch").style.top+";"+
-document.getElementById("OpenWikipediaSearch").style.left+";"+document.getElementById("OpenWikipediaSearch").style.top+";"+changeMenubr+";"+" InterfaceSaveEnd ";
+document.getElementById("OpenWikipediaSearch").style.left+";"+document.getElementById("OpenWikipediaSearch").style.top+";"+changeMenubr+";"+NewInterface+";"+" InterfaceSaveEnd ";
 var divSeparateL=document.getElementsByTagName("div");var divSeparateLS='';
 for(var sd=0;sd<divSeparateL.length;sd++)
 {if(divSeparateL[sd].id=='id_divSepTableImage')
@@ -24374,6 +24705,7 @@ if(loadfree==true)
 if(localStorageOpenWebGIS.split(" InterfaceSave ")[1])
 {var strsaveinter=localStorageOpenWebGIS.split(" InterfaceSave ;")[1].split(" InterfaceSaveEnd ")[0];
 var newstrsaveinter=strsaveinter.split(";");
+if(newstrsaveinter[24]&&newstrsaveinter[24]=="NewInter_yes"){Change_InterfaceNew();}
 document.body.style.backgroundColor=newstrsaveinter[0];document.getElementById("map").style.width=newstrsaveinter[1];
 document.getElementById("map").style.height=newstrsaveinter[2];document.getElementById("mapResize").style.left=newstrsaveinter[3];
 document.getElementById("mapResize").style.top=newstrsaveinter[4];document.getElementById("external_control2").style.backgroundColor=newstrsaveinter[5];
@@ -24385,7 +24717,8 @@ document.getElementById("dragCoord").style.left=newstrsaveinter[14];document.get
 document.getElementById("dragScale").style.left=newstrsaveinter[16];document.getElementById("dragToolbar_opt").style.top=newstrsaveinter[17];
 document.getElementById("dragToolbar_opt").style.left=newstrsaveinter[18];document.getElementById("OpenStreetMapIdSearch").style.left=newstrsaveinter[19];
 document.getElementById("OpenStreetMapIdSearch").style.top=newstrsaveinter[20];document.getElementById("OpenWikipediaSearch").style.left=newstrsaveinter[21];
-document.getElementById("OpenWikipediaSearch").style.top=newstrsaveinter[22]; var changeMenuv=newstrsaveinter[23]; if(changeMenuv=='cMenubrYes'){changeMenu();}
+document.getElementById("OpenWikipediaSearch").style.top=newstrsaveinter[22]; var changeMenuv=newstrsaveinter[23]; if(changeMenuv=='cMenubrYes'){changeMenu();if(newstrsaveinter[24]&&newstrsaveinter[24]=="NewInter_yes"){changeMenu();}}else{if(newstrsaveinter[24]&&newstrsaveinter[24]=="NewInter_yes"){changeMenu();}}
+
 }
 if(localStorageOpenWebGIS.split(" InterfSepDSaveStart ")[1])
 {
@@ -24793,6 +25126,7 @@ function colorEdit(obj){ /*colorWin= open("color.htm", "Edit Color interface",
 <!--<div onclick="Login()" style="position:relative;left:380px;top:-80px;bottom:50px;width:50px; height:20px;background:#082567; cursor:pointer">Login</div></div>/-->
  <div id="colorMain" style="position:relative;top:-90px;left:180px" align="left"> <img id="colorColorMain" title="edit color background page" src="img/color.png" onclick="colorEdit(this)" > </div>
 <input id="buttonWeather_id" type="button" value="Weather" class="Weathclass" onclick="Weather_Layer()"/>
+<input id="buttonNewInterface_id" type="button" value="New Interface" class="NewInterfaceclass" onclick="Change_InterfaceNew()"/>
 <!--<input type="button" value="Donate" class="Donclass" onclick="Donate()"/>-->
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" class="DonPclass">
 <input type="hidden" name="cmd" value="_s-xclick">
@@ -24804,7 +25138,7 @@ function colorEdit(obj){ /*colorWin= open("color.htm", "Edit Color interface",
 
 
 </div>
-<div style="position:absolute;top:70px;left:210px;cursor:pointer;width:170px">
+<div id="inf_contacts_id" style="position:absolute;top:70px;left:210px;cursor:pointer;width:170px">
 <a href="https://plus.google.com/112343419546545616455/posts" target="_blank"><img src="img/g.png" ></a>
 <a href="https://www.facebook.com/openwebgisPage" target="_blank"><img src="img/f.png" ></a>
 <a href="http://vk.com/openwebgis" target="_blank"><img src="img/vk.png" ></a>
@@ -24927,6 +25261,7 @@ Item separation symbol must be the semicolon or comma" class="podpunkt" onMouseO
 <a href="#" onclick="MonTemperature();"><div class="podpunkt" onMouseOver="overPunkt2(this);" onMouseOut="outPunkt2(this);"><div title="This service is provided by International Research Institute for Climate and Society (IGOSS) http://iridl.ldeo.columbia.edu" style="font-size:11px">Monthly temperature</div></div></a>
 <a href="#" onclick="InternationalSpace();"><div class="podpunkt" onMouseOver="overPunkt2(this);" onMouseOut="outPunkt2(this);"><div title="Satellites Tracking" style="font-size:11px">Satellites Tracking</div></div></a>
 <a href="#" onclick="OpenSreetMapdatabase();"><div class="podpunkt" onMouseOver="overPunkt2(this);" onMouseOut="outPunkt2(this);"><div title="Select information from OpenSreetMap database" style="font-size:11px">OpenSreetMap database</div></div></a>
+<a href="#" onclick="GBIFMapdatabase();"><div class="podpunkt" onMouseOver="overPunkt2(this);" onMouseOut="outPunkt2(this);"><div title="Select information from The Global Biodiversity Information Facility (GBIF) is an international open data infrastructure, funded by governments." style="font-size:11px">Global Biodiversity</div></div></a>
  
 </div></div>
 </div>

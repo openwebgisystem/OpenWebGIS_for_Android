@@ -10882,7 +10882,7 @@ if(document.getElementById("Id_PaleolinkWiki").checked==true)
 {for (var i in first_point.attributes)
 {if(i=="order"||i=="subgenus_name"||i=="taxon_name"||i=="stratgroup"||i=="early_interval"||i=="state"||i=="country"||i=="species_name"||i=="family"||i=="class"||i=="late_interval"||i=="matched_name"||i=="county"||i=="phylum"||i=="genus_name"||i=="lithology2")
 {if (typeof first_point.attributes[i]=='undefined'){}else{ if(first_point.attributes[i]&&typeof(first_point.attributes[i])=="string"){var paleoStr=first_point.attributes[i].replace(/\s+/g, '_');}
-first_point.attributes[i]="<a href=https://en.wikipedia.org/wiki/"+paleoStr+" target=_blank>"+first_point.attributes[i]+'</a>';}}}
+first_point.attributes[i]='<a href="https://en.wikipedia.org/wiki/'+paleoStr+'" target="_blank">'+first_point.attributes[i]+'</a>';}}}
 
 }
 arrfirst_point.push(first_point);

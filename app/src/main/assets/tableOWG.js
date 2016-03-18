@@ -1157,12 +1157,12 @@ if(document.getElementById("fieldChartX").value=="0"||document.getElementById("f
 var countV1=0;var feat1='';
 var mLayers=arrayFeat;
 countV1=mLayers.length;feat1=mLayers;
-if(isNaN(mLayers[0].attributes[document.getElementById("fieldChartY").value]*1)==true){alert("Error value is string");return;} 
+//if(isNaN(mLayers[0].attributes[document.getElementById("fieldChartY").value]*1)==true){alert("Error value is string");return;} 
 
 var countV2=0;var feat2='';
 
 countV2=mLayers.length;feat2=mLayers;
-if(isNaN(mLayers[0].attributes[document.getElementById("fieldChartX").value]*1)==true){alert("Error value is string");return;} 
+//if(isNaN(mLayers[0].attributes[document.getElementById("fieldChartX").value]*1)==true){alert("Error value is string");return;} 
 if(countV1!=countV2){alert("number of first value not equal number of second value");return;}
 
 var mean1=0;var mean2=0; sumV1V2=0; squaredVal1=0;squaredVal2=0;

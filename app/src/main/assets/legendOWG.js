@@ -159,9 +159,14 @@ var body = document.body; var docElem = document.documentElement;
  var clientTop = docElem.clientTop || body.clientTop || 0; var clientLeft = docElem.clientLeft || body.clientLeft || 0
  var topTop = 0 + scrollTop - clientTop; var leftLeft =0 + scrollLeft - clientLeft
 var DivEditeLeg=document.createElement("div");DivEditeLeg.id="id_legendOWG";
-DivEditeLeg.style.width=screen.width;DivEditeLeg.style.height=screen.height;
+//DivEditeLeg.style.width=screen.width;DivEditeLeg.style.height=screen.height;
+DivEditeLeg.style.height= ('innerHeight' in window? window.innerHeight :document.compatMode!=='BackCompat'? document.documentElement.clientHeight :
+document.body.clientHeight);
+DivEditeLeg.style.width= ('innerWidth' in window? window.innerWidth :document.compatMode!=='BackCompat'? document.documentElement.clientWidth :
+document.body.clientWidth);
+DivEditeLeg.style.opacity="1";DivEditeLeg.style.height=parseInt(DivEditeLeg.style.height.split("px"))+100+"px";DivEditeLeg.style.width=parseInt(DivEditeLeg.style.width.split("px"))+100+"px"
 DivEditeLeg.className="id_divRoutLegMain";DivEditeLeg.style.position="absolute";DivEditeLeg.style.display="block";DivEditeLeg.style.zIndex = 300000;DivEditeLeg.style.background="#ffffff";DivEditeLeg.style.border="2px solid black";DivEditeLeg.style.color="#000000";
-DivEditeLeg.style.left=Math.round(document.body.clientWidth/2-100);DivEditeLeg.style.top="0px";
+DivEditeLeg.style.left=Math.round(document.body.clientWidth/2+200);DivEditeLeg.style.top="0px";
 DivEditeLeg.innerHTML=strselle;
 if(!document.getElementById("id_legendOWG"))
 {body.appendChild(DivEditeLeg); 

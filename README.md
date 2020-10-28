@@ -7,7 +7,7 @@ Please support this project.
 he OpenWebGIS for Android has online and local versions. 
 In local version, you can use OpenWebGIS without having to connect to the server of OpenWebGIS and even without Internet connection.
 In local version, some functions do not work, but in future there will be the modification of these functions for the local version. 
-Online full functionality web version of OpenWebGIS is at http://opengis.ddns.net/gis/opengis_eng.html.
+Online full functionality web version of OpenWebGIS is at http://opengis2.ddns.net/gis/opengis_eng.html.
 The [OpenWebGIS blog] (http://openwebgisystem.blogspot.com) and [full list of articles about OpenWebGIS] (http://openwebgisystem.blogspot.com/2015/08/list-of-articles-about-openwebgis-in.html) provide a lot of information about possibilities for users' data operating.
 Online version is adapted for Mozilla Firefox and Google Chrome browsers. 
 In other browsers, OpenWebGIS may not display and work correctly. 
